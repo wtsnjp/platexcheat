@@ -1,36 +1,13 @@
-\documentclass[10pt,landscape]{article}
+\documentclass[10pt,landscape]{jarticle}
 \usepackage{multicol}
 \usepackage{calc}
 \usepackage{ifthen}
+\usepackage{otf}
+\usepackage{url}
 \usepackage[landscape]{geometry}
 
 % To make this come out properly in landscape mode, do one of the following
-% 1.
-%  pdflatex latexsheet.tex
-%
-% 2.
-%  latex latexsheet.tex
-%  dvips -P pdf  -t landscape latexsheet.dvi
-%  ps2pdf latexsheet.ps
-
-
-% If you're reading this, be prepared for confusion.  Making this was
-% a learning experience for me, and it shows.  Much of the placement
-% was hacked in; if you make it better, let me know...
-
-
-% 2008-04
-% Changed page margin code to use the geometry package. Also added code for
-% conditional page margins, depending on paper size. Thanks to Uwe Ziegenhagen
-% for the suggestions.
-
-% 2006-08
-% Made changes based on suggestions from Gene Cooperman. <gene at ccs.neu.edu>
-
-
-% To Do:
-% \listoffigures \listoftables
-% \setcounter{secnumdepth}{0}
+%  ptex2pdf -l latexsheet.tex
 
 
 % This sets page margins to .5 inch if using letter paper, and to 1cm
@@ -46,6 +23,11 @@
 % Turn off header and footer
 \pagestyle{empty}
  
+
+% Macros
+\newcommand{\Meta}[1]{$\langle$\mbox{}\textit{#1}\mbox{}$\rangle$}
+\newcommand{\psp}{\phantom{ }}
+
 
 % Redefine section commands to use less space
 \makeatletter
@@ -83,7 +65,6 @@
 \footnotesize
 \begin{multicols}{3}
 
-
 % multicol parameters
 % These lengths are set only within the two main columns
 %\setlength{\columnseprule}{0.25pt}
@@ -93,264 +74,235 @@
 \setlength{\columnsep}{2pt}
 
 \begin{center}
-     \Large{\textbf{\LaTeXe\ Cheat Sheet}} \\
+     \Large{\textbf{p\LaTeXe\ チートシート}} \\
 \end{center}
 
-\section{Document classes}
+\section{標準クラス}
 \begin{tabular}{@{}ll@{}}
-\verb!book!    & Default is two-sided. \\
-\verb!report!  & No \verb!\part! divisions. \\
-\verb!article! & No \verb!\part! or \verb!\chapter! divisions. \\
-\verb!letter!  & Letter (?). \\
-\verb!slides!  & Large sans-serif font.
+\verb!jbook!    & 横書き書籍用．デフォルトで偶奇ページの区別あり． \\
+\verb!jreport!  & 横書きレポート用．\verb!\part! なし． \\
+\verb!jarticle! & 横書き論文用．\verb!\part!と \verb!\chapter!なし． \\
+\verb!tbook!    & 縦書き書籍用．デフォルトで偶奇ページの区別あり． \\
+\verb!treport!  & 縦書きレポート用．\verb!\part! なし． \\
+\verb!tarticle! & 縦書き論文用．\verb!\part!と \verb!\chapter!なし． \\
 \end{tabular}
+	
+ドキュメントの冒頭付近でクラスを宣言：
+\verb!\documentclass{!\Meta{クラス}\verb!}!．
+\verb!\begin{document}! で内容を開始し \verb!\end{document}! で文書を終える．
 
-Used at the very beginning of a document:
-\verb!\documentclass{!\textit{class}\verb!}!.  Use
-\verb!\begin{document}! to start contents and \verb!\end{document}! to
-end the document.
-
-
-\subsection{Common \texttt{documentclass} options}
+\subsection{主なクラスオプション}
 \newlength{\MyLen}
-\settowidth{\MyLen}{\texttt{letterpaper}/\texttt{a4paper} \ }
+\settowidth{\MyLen}{\texttt{a4paper}/\texttt{b5paper} \ }
 \begin{tabular}{@{}p{\the\MyLen}%
                 @{}p{\linewidth-\the\MyLen}@{}}
-\texttt{10pt}/\texttt{11pt}/\texttt{12pt} & Font size. \\
-\texttt{letterpaper}/\texttt{a4paper} & Paper size. \\
-\texttt{twocolumn} & Use two columns. \\
-\texttt{twoside}   & Set margins for two-sided. \\
-\texttt{landscape} & Landscape orientation.  Must use
-                     \texttt{dvips -t landscape}. \\
-\texttt{draft}     & Double-space lines.
+\texttt{10pt}/\texttt{11pt}/\texttt{12pt} & フォントサイズ． \\
+\texttt{a4paper}/\texttt{b5paper} & 用紙サイズ． \\
+\texttt{a4j}/\texttt{b5j} & 用紙サイズ（狭い余白）． \\
+\texttt{twocolumn} & 二段組． \\
+\texttt{twoside}   & 偶奇ページの区別． \\
+\texttt{landscape} & 用紙を横向きに使う． \\
+\texttt{fleqn}     & 別行立て数式を左寄せ． \\
+\texttt{tombow}    & トンボやファイル情報などを出力．
 \end{tabular}
 
-Usage:
-\verb!\documentclass[!\textit{opt,opt}\verb!]{!\textit{class}\verb!}!.
+書式：\verb!\documentclass[!\Meta{オプション}\verb!]{!\Meta{クラス}\verb!}!.
 
+\subsection{パッケージ}
+\verb!\documentclass!と \verb!\begin{document}! の間（プリアンブル）で
+\verb!\usepackage[!\Meta{オプション}\verb!]{!\Meta{パッケージ}\verb!}! を
+記述して読み込む．
 
-\subsection{Packages}
-\settowidth{\MyLen}{\texttt{multicol} }
+\subsection{タイトル}
+\settowidth{\MyLen}{\texttt{.title.\Meta{タイトル}.} }
 \begin{tabular}{@{}p{\the\MyLen}%
                 @{}p{\linewidth-\the\MyLen}@{}}
-%\begin{tabular}{@{}ll@{}}
-\texttt{fullpage}  &  Use 1 inch margins. \\
-\texttt{anysize}   &  Set margins: \verb!\marginsize{!\textit{l}%
-                        \verb!}{!\textit{r}\verb!}{!\textit{t}%
-                        \verb!}{!\textit{b}\verb!}!.            \\
-\texttt{multicol}  &  Use $n$ columns: 
-                        \verb!\begin{multicols}{!$n$\verb!}!.   \\
-\texttt{latexsym}  &  Use \LaTeX\ symbol font. \\
-\texttt{graphicx}  &  Show image:
-                        \verb!\includegraphics[width=!%
-                        \textit{x}\verb!]{!%
-                        \textit{file}\verb!}!. \\
-\texttt{url}       & Insert URL: \verb!\url{!%
-                        \textit{http://\ldots}%
-                        \verb!}!.
+\verb!\author{!\Meta{著者}\verb!}!    & 文書の著者．複数時は \verb!\and!で区切る． \\
+\verb!\thanks{!\Meta{注釈}\verb!}!    & 著者名に脚注（主に所属機関）を付ける． \\
+\verb!\title{!\Meta{タイトル}\verb!}! & 文書のタイトル． \\
+\verb!\date{!\Meta{日付}\verb!}!      & 文書の作成日．省略時は組版日を自動的に挿入． \\
 \end{tabular}
 
-Use before \verb!\begin{document}!. 
-Usage: \verb!\usepackage{!\textit{package}\verb!}!
+これらのコマンドは \verb!\begin{document}! の前に記入．\verb!\maketitle! を文書の冒頭で
+宣言するとタイトルを出力．
 
-
-\subsection{Title}
-\settowidth{\MyLen}{\texttt{.author.text.} }
-\begin{tabular}{@{}p{\the\MyLen}%
-                @{}p{\linewidth-\the\MyLen}@{}}
-\verb!\author{!\textit{text}\verb!}! & Author of document. \\
-\verb!\title{!\textit{text}\verb!}!  & Title of document. \\
-\verb!\date{!\textit{text}\verb!}!   & Date. \\
-\end{tabular}
-
-These commands go before \verb!\begin{document}!.  The declaration
-\verb!\maketitle! goes at the top of the document.
-
-\subsection{Miscellaneous}
+\subsection{ページスタイル}
 \settowidth{\MyLen}{\texttt{.pagestyle.empty.} }
 \begin{tabular}{@{}p{\the\MyLen}%
                 @{}p{\linewidth-\the\MyLen}@{}}
-\verb!\pagestyle{empty}!     &   Empty header, footer
-                                 and no page numbers. \\
-
+\verb!\pagestyle{empty}! & ヘッダー・フッターを空にし，ページ番号もなし．
 \end{tabular}
 
-
-
-\section{Document structure}
+\section{文書構造}
 \begin{multicols}{2}
-\verb!\part{!\textit{title}\verb!}!  \\
-\verb!\chapter{!\textit{title}\verb!}!  \\
-\verb!\section{!\textit{title}\verb!}!  \\
-\verb!\subsection{!\textit{title}\verb!}!  \\
-\verb!\subsubsection{!\textit{title}\verb!}!  \\
-\verb!\paragraph{!\textit{title}\verb!}!  \\
-\verb!\subparagraph{!\textit{title}\verb!}!
+\verb!\part{!\Meta{タイトル}\verb!}!  \\
+\verb!\chapter{!\Meta{タイトル}\verb!}!  \\
+\verb!\section{!\Meta{タイトル}\verb!}!  \\
+\verb!\subsection{!\Meta{タイトル}\verb!}!  \\
+\verb!\subsubsection{!\Meta{タイトル}\verb!}!  \\
+\verb!\paragraph{!\Meta{タイトル}\verb!}!  \\
+\verb!\subparagraph{!\Meta{タイトル}\verb!}!
 \end{multicols}
 {\raggedright
-Section commands can be followed with an \texttt{*}, like
-\verb!\section*{!\textit{title}\verb!}!, to supress heading
-numbers. \verb!\setcounter{secnumdepth}{!$x$\verb!}! supresses heading
-numbers of depth $>x$, where \verb!chapter! has depth 0.
+上記の命令の後ろに \texttt{*} を付けた場合（例えば \verb!\section*{!\Meta{タイトル}\verb!}!），
+見出し番号は出力されない．\verb!\setcounter{secnumdepth}{!$x$\verb!}! により深さが$x$までの
+見出しにデフォルトで番号が付くように設定できる．
 }
 
-\subsection{Text environments}
-\settowidth{\MyLen}{\texttt{.begin.quotation.}}
+\subsection{テキスト環境}
+\settowidth{\MyLen}{\texttt{.begin.quotation..}}
 \begin{tabular}{@{}p{\the\MyLen}%
                 @{}p{\linewidth-\the\MyLen}@{}}
-\verb!\begin{comment}!    &  Comment block (not printed). \\
-\verb!\begin{quote}!      &  Indented quotation block. \\
-\verb!\begin{quotation}!  &  Like \texttt{quote} with indented paragraphs. \\
-\verb!\begin{verse}!      &  Quotation block for verse.
+\verb!\begin{comment}!    &  コメントブロック（印字されない）． \\
+\verb!\begin{quote}!      &  短い引用（段落の字下げなし）． \\
+\verb!\begin{quotation}!  &  長文の引用． \\
+\verb!\begin{verse}!      &  詩の引用．
 \end{tabular}
 
-\subsection{Lists}
-\settowidth{\MyLen}{\texttt{.begin.description.}}
+\subsection{リスト}
+\settowidth{\MyLen}{\texttt{.item.ラベル.テキスト..} }
 \begin{tabular}{@{}p{\the\MyLen}%
                 @{}p{\linewidth-\the\MyLen}@{}}
-\verb!\begin{enumerate}!        &  Numbered list. \\
-\verb!\begin{itemize}!          &  Bulleted list. \\
-\verb!\begin{description}!      &  Description list. \\
-\verb!\item! \textit{text}      &  Add an item. \\
-\verb!\item[!\textit{x}\verb!]! \textit{text}
-                                &  Use \textit{x} instead of normal
-                        bullet or number.  Required for descriptions. \\
+\verb!\begin{itemize}!          &  箇条書き． \\
+\verb!\begin{enumerate}!        &  連番付き箇条書き． \\
+\verb!\begin{description}!      &  説明付き箇条書き． \\
+\verb!\item! \Meta{テキスト}    &  箇条書きの項目． \\
+\verb!\item[!\Meta{ラベル}\verb!]!\Meta{テキスト}
+                                &  ラベルを直接指定（\texttt{description}では必須）． \\
 \end{tabular}
 
-
-
-
-\subsection{References}
-\settowidth{\MyLen}{\texttt{.pageref.marker..}}
+\subsection{相互参照と脚注}
+\settowidth{\MyLen}{\texttt{.footnote.テキスト..} }
 \begin{tabular}{@{}p{\the\MyLen}%
                 @{}p{\linewidth-\the\MyLen}@{}}
-\verb!\label{!\textit{marker}\verb!}!   &  Set a marker for cross-reference, 
-                          often of the form \verb!\label{sec:item}!. \\
-\verb!\ref{!\textit{marker}\verb!}!   &  Give section/body number of marker. \\
-\verb!\pageref{!\textit{marker}\verb!}! &  Give page number of marker. \\
-\verb!\footnote{!\textit{text}\verb!}!  &  Print footnote at bottom of page. \\
+\verb!\label{!\Meta{マーカ}\verb!}!      &  相互参照用のマーカをセット． \\
+\verb!\ref{!\Meta{マーカ}\verb!}!        &  マーカの位置（節番号など）を出力． \\
+\verb!\pageref{!\Meta{マーカ}\verb!}!    &  マーカのページ番号を出力． \\
+\verb!\footnote{!\Meta{テキスト}\verb!}! &  ページ下部に脚注を出力． \\
 \end{tabular}
 
-
-\subsection{Floating bodies}
-\settowidth{\MyLen}{\texttt{.begin.equation..place.}}
+\subsection{フロート}
+\settowidth{\MyLen}{\texttt{.begin.equation.位置指定.} }
 \begin{tabular}{@{}p{\the\MyLen}%
                 @{}p{\linewidth-\the\MyLen}@{}}
-\verb!\begin{table}[!\textit{place}\verb!]!     &  Add numbered table. \\
-\verb!\begin{figure}[!\textit{place}\verb!]!    &  Add numbered figure. \\
-\verb!\begin{equation}[!\textit{place}\verb!]!  &  Add numbered equation. \\
-\verb!\caption{!\textit{text}\verb!}!           &  Caption for the body. \\
+\verb!\begin{table}[!\Meta{位置指定}\verb!]!     &  表扱いするもの． \\
+\verb!\begin{figure}[!\Meta{位置指定}\verb!]!    &  図扱いするもの． \\
+\verb!\caption{!\Meta{テキスト}\verb!}!      &  キャプションを付ける． \\
 \end{tabular}
 
-The \textit{place} is a list valid placements for the body.  \texttt{t}=top,
-\texttt{h}=here, \texttt{b}=bottom, \texttt{p}=separate page, \texttt{!}=place even if ugly.  Captions and label markers should be within the environment.
+\Meta{位置指定}に次の文字の組み合わせを指定することでフロートの挿入位置を制御することが
+できる：\texttt{t}=ページ上部，\texttt{b}=ページ下部，\texttt{p}=独立ページ，
+\texttt{h}=その場，\texttt{!}=条件が悪くても指定位置に配置．
 
-%---------------------------------------------------------------------------
 
-\section{Text properties}
+\section{テキストプロパティ}
 
-\subsection{Font face}
+\subsection{書体}
 \newcommand{\FontCmd}[3]{\PBS\verb!\#1{!\textit{text}\verb!}!  \> %
                          \verb!{\#2 !\textit{text}\verb!}! \> %
                          \#1{#3}}
 \begin{tabular}{@{}l@{}l@{}l@{}}
-\textit{Command} & \textit{Declaration} & \textit{Effect} \\
-\verb!\textrm{!\textit{text}\verb!}!                    & %
-        \verb!{\rmfamily !\textit{text}\verb!}!               & %
+\verb!\textrm{!\Meta{テキスト}\verb!}!                    & %
+        \verb!{\rmfamily !\Meta{テキスト}\verb!}!               & %
         \textrm{Roman family} \\
-\verb!\textsf{!\textit{text}\verb!}!                    & %
-        \verb!{\sffamily !\textit{text}\verb!}!               & %
+\verb!\textsf{!\Meta{テキスト}\verb!}!                    & %
+        \verb!{\sffamily !\Meta{テキスト}\verb!}!               & %
         \textsf{Sans serif family} \\
-\verb!\texttt{!\textit{text}\verb!}!                    & %
-        \verb!{\ttfamily !\textit{text}\verb!}!               & %
+\verb!\texttt{!\Meta{テキスト}\verb!}!                    & %
+        \verb!{\ttfamily !\Meta{テキスト}\verb!}!               & %
         \texttt{Typewriter family} \\
-\verb!\textmd{!\textit{text}\verb!}!                    & %
-        \verb!{\mdseries !\textit{text}\verb!}!               & %
+\verb!\textmd{!\Meta{テキスト}\verb!}!                    & %
+        \verb!{\mdseries !\Meta{テキスト}\verb!}!               & %
         \textmd{Medium series} \\
-\verb!\textbf{!\textit{text}\verb!}!                    & %
-        \verb!{\bfseries !\textit{text}\verb!}!               & %
+\verb!\textbf{!\Meta{テキスト}\verb!}!                    & %
+        \verb!{\bfseries !\Meta{テキスト}\verb!}!               & %
         \textbf{Bold series} \\
-\verb!\textup{!\textit{text}\verb!}!                    & %
-        \verb!{\upshape !\textit{text}\verb!}!               & %
+\verb!\textup{!\Meta{テキスト}\verb!}!                    & %
+        \verb!{\upshape !\Meta{テキスト}\verb!}!               & %
         \textup{Upright shape} \\
-\verb!\textit{!\textit{text}\verb!}!                    & %
-        \verb!{\itshape !\textit{text}\verb!}!               & %
+\verb!\textit{!\Meta{テキスト}\verb!}!                    & %
+        \verb!{\itshape !\Meta{テキスト}\verb!}!               & %
         \textit{Italic shape} \\
-\verb!\textsl{!\textit{text}\verb!}!                    & %
-        \verb!{\slshape !\textit{text}\verb!}!               & %
+\verb!\textsl{!\Meta{テキスト}\verb!}!                    & %
+        \verb!{\slshape !\Meta{テキスト}\verb!}!               & %
         \textsl{Slanted shape} \\
-\verb!\textsc{!\textit{text}\verb!}!                    & %
-        \verb!{\scshape !\textit{text}\verb!}!               & %
+\verb!\textsc{!\Meta{テキスト}\verb!}!                    & %
+        \verb!{\scshape !\Meta{テキスト}\verb!}!               & %
         \textsc{Small Caps shape} \\
-\verb!\emph{!\textit{text}\verb!}!                      & %
-        \verb!{\em !\textit{text}\verb!}!               & %
-        \emph{Emphasized} \\
-\verb!\textnormal{!\textit{text}\verb!}!                & %
-        \verb!{\normalfont !\textit{text}\verb!}!       & %
-        \textnormal{Document font} \\
-\verb!\underline{!\textit{text}\verb!}!                 & %
-                                                        & %
-        \underline{Underline}
+%\verb!\textnormal{!\Meta{テキスト}\verb!}!\psp            & %
+%        \verb!{\normalfont !\Meta{テキスト}\verb!}!\psp        & %
+%        \textnormal{Document font} \\
+\verb!\textmc{!\Meta{テキスト}\verb!}!\psp                & %
+        \verb!{\mcfamily !\Meta{テキスト}\verb!}!\psp           & %
+        \textmc{明朝体} \\
+\verb!\textgt{!\Meta{テキスト}\verb!}!                    & %
+        \verb!{\gtfamily !\Meta{テキスト}\verb!}!               & %
+        \textgt{ゴシック体} \\
 \end{tabular}
 
-The command (t\textit{tt}t) form handles spacing better than the
-declaration (t{\itshape tt}t) form.
+\verb!\textit!のようなコマンドを使った方 (t\textit{tt}t) が \verb|\itshape| のような宣言による
+書体変更を行う (t{\itshape tt}t) よりも空白がきれいに入る．\verb!\normalfont!,
+\verb!\textnormal{!\Meta{テキスト}\verb!}! を用いると，ファミリ・シリーズ・シェイプを同時に
+デフォルト設定へ戻すことができる．
 
-\subsection{Font size}
+\subsection{装飾}
+\begin{tabular}{@{}l@{}l@{}l@{}}
+\verb!\emph{!\Meta{テキスト}\verb!}!                      & %
+        \verb!{\em !\Meta{テキスト}\verb!}!\psp           & %
+        \emph{強調}（効果は環境依存） \\
+\verb!\underline{!\Meta{テキスト}\verb!}!                 & %
+                                                        & %
+        \underline{下線}
+\end{tabular}
+
+\subsection{フォントサイズ}
 \setlength{\columnsep}{14pt} % Need to move columns apart a little
 \begin{multicols}{2}
 \begin{tabbing}
 \verb!\footnotesize!          \= \kill
-\verb!\tiny!                  \>  \tiny{tiny} \\
-\verb!\scriptsize!            \>  \scriptsize{scriptsize} \\
-\verb!\footnotesize!          \>  \footnotesize{footnotesize} \\
-\verb!\small!                 \>  \small{small} \\
-\verb!\normalsize!            \>  \normalsize{normalsize} \\
-\verb!\large!                 \>  \large{large} \\
-\verb!\Large!                 \=  \Large{Large} \\  % Tab hack for new column
-\verb!\LARGE!                 \>  \LARGE{LARGE} \\
-\verb!\huge!                  \>  \huge{huge} \\
-\verb!\Huge!                  \>  \Huge{Huge}
+\verb!\tiny!                  \>  \tiny{極小} \\
+\verb!\scriptsize!            \>  \scriptsize{スクリプトサイズ} \\
+\verb!\footnotesize!          \>  \footnotesize{脚注サイズ} \\
+\verb!\small!                 \>  \small{小さい} \\
+\verb!\normalsize!            \>  \normalsize{標準} \\
+\verb!\large!                 \>  \large{大きい} \\
+\verb!\Large!                 \=  \Large{超大きい} \\  % Tab hack for new column
+\verb!\LARGE!                 \>  \LARGE{超々大きい} \\
+\verb!\huge!                  \>  \huge{巨大} \\
+\verb!\Huge!                  \>  \Huge{超巨大}
 \end{tabbing}
 \end{multicols}
 \setlength{\columnsep}{1pt} % Set column separation back
 
-These are declarations and should be used in the form
-\verb!{\small! \ldots\verb!}!, or without braces to affect the entire
-document.
+これらの宣言は \verb!{\small! \ldots\verb!}! のような形で利用するか，ブレースなし
+で以降の文書全体のフォントサイズを変更する．
 
-
-\subsection{Verbatim text}
-
+\subsection{入力通りに出力}
 \settowidth{\MyLen}{\texttt{.begin.verbatim..} }
 \begin{tabular}{@{}p{\the\MyLen}%
                 @{}p{\linewidth-\the\MyLen}@{}}
-\verb@\begin{verbatim}@ & Verbatim environment. \\
-\verb@\begin{verbatim*}@ & Spaces are shown as \verb*@ @. \\
-\verb@\verb!text!@ & Text between the delimiting characters (in this case %
-                      `\texttt{!}') is verbatim.
+\verb@\begin{verbatim}@  & verbatim環境（入力通りに出力される）． \\
+\verb@\begin{verbatim*}@ & スペースを `\verb*@ @' で明示するverbatim環境. \\
+\verb@\verb!@\Meta{テキスト}\verb@!@
+                         & デリミタ（ここでは `\texttt{!}'）間の内容をそのまま出力．
 \end{tabular}
 
-
-\subsection{Justification}
-\begin{tabular}{@{}ll@{}}
-\textit{Environment}  &  \textit{Declaration}  \\
-\verb!\begin{center}!      & \verb!\centering!  \\
-\verb!\begin{flushleft}!  & \verb!\raggedright! \\
-\verb!\begin{flushright}! & \verb!\raggedleft!  \\
+\subsection{配置}
+\begin{tabular}{@{}lll@{}}
+\textbf{環境}  &  \textbf{宣言}  &  \textbf{説明}  \\
+\verb!\begin{center}!     & \verb!\centering!   & 中央寄せ \\
+\verb!\begin{flushleft}!  & \verb!\raggedright! & 左寄せ \\
+\verb!\begin{flushright}! & \verb!\raggedleft!  & 右寄せ \\
 \end{tabular}
 
-\subsection{Miscellaneous}
-\verb!\linespread{!$x$\verb!}! changes the line spacing by the
-multiplier $x$.
+%\subsection{Miscellaneous}
+%\verb!\linespread{!$x$\verb!}! changes the line spacing by the
+%multiplier $x$.
 
 
+\section{記号など}
 
-
-
-\section{Text-mode symbols}
-
-\subsection{Symbols}
+\subsection{一般的な記号}
 \begin{tabular}{@{}l@{\hspace{1em}}l@{\hspace{2em}}l@{\hspace{1em}}l@{\hspace{2em}}l@{\hspace{1em}}l@{\hspace{2em}}l@{\hspace{1em}}l@{}}
 \&              &  \verb!\&! &
 \_              &  \verb!\_! &
@@ -366,7 +318,7 @@ multiplier $x$.
 \S              &  \verb!\S! \\
 \end{tabular}
 
-\subsection{Accents}
+\subsection{アクセント記号}
 \begin{tabular}{@{}l@{\ }l|l@{\ }l|l@{\ }l|l@{\ }l|l@{\ }l@{}}
 \`o   & \verb!\`o! &
 \'o   & \verb!\'o! &
@@ -398,8 +350,7 @@ multiplier $x$.
 ?`    & \verb!?`! &
 \end{tabular}
 
-
-\subsection{Delimiters}
+\subsection{デリミタ}
 \begin{tabular}{@{}l@{\ }ll@{\ }ll@{\ }ll@{\ }ll@{\ }ll@{\ }l@{}}
 `       & \verb!`!  &
 ``      & \verb!``! &
@@ -415,95 +366,98 @@ multiplier $x$.
 \textgreater  &  \verb!\textgreater! \\
 \end{tabular}
 
-\subsection{Dashes}
+\subsection{ダッシュ類}
 \begin{tabular}{@{}llll@{}}
-\textit{Name} & \textit{Source} & \textit{Example} & \textit{Usage} \\
-hyphen  & \verb!-!   & X-ray          & In words. \\
-en-dash & \verb!--!  & 1--5           & Between numbers. \\
-em-dash & \verb!---! & Yes---or no?    & Punctuation.
+\textbf{名前} & \textbf{コード} & \textbf{使用例} & \textbf{用途} \\
+ハイフン & \verb!-!   & X-ray          & 単語内，2単語の連結． \\
+en-dash  & \verb!--!  & 1--5           & 範囲を表す場合など． \\
+em-dash  & \verb!---! & Yes---or no?   & 挿入句の導入など．
 \end{tabular}
 
-
-\subsection{Line and page breaks}
-\settowidth{\MyLen}{\texttt{.pagebreak} }
+\subsection{行とページ}
+\settowidth{\MyLen}{\texttt{.clearpage} }
 \begin{tabular}{@{}p{\the\MyLen}%
                 @{}p{\linewidth-\the\MyLen}@{}}
-\verb!\\!          &  Begin new line without new paragraph.  \\
-\verb!\\*!         &  Prohibit pagebreak after linebreak. \\
-\verb!\kill!       &  Don't print current line. \\
-\verb!\pagebreak!  &  Start new page. \\
-\verb!\noindent!   &  Do not indent current line.
+\verb!\par!       & 改段落．単に空白行を挟んでも同じ． \\
+\verb!\\!         & 強制改行（段落は維持）． \\
+\verb!\\*!        & 改ページを伴わない強制改行． \\
+\verb!\kill!      & 現在行を印刷しない． \\
+\verb!\newpage!   & 強制改ページ（二段組左段の場合は右段に移る）． \\
+\verb!\clearpage! & まだ出力していない図表をすべて出力して改ページ． \\
+\verb!\noindent!  & 現在行をインデントしない．
 \end{tabular}
 
-
-\subsection{Miscellaneous}
-\settowidth{\MyLen}{\texttt{.rule.w..h.} }
+\subsection{空白}
+\settowidth{\MyLen}{\texttt{.hspace.長さ..} }
 \begin{tabular}{@{}p{\the\MyLen}%
                 @{}p{\linewidth-\the\MyLen}@{}}
-\verb!\today!  &  \today. \\
-\verb!$\sim$!  &  Prints $\sim$ instead of \verb!\~{}!, which makes \~{}. \\
-\verb!~!       &  Space, disallow linebreak (\verb!W.J.~Clinton!). \\
-\verb!\@.!     &  Indicate that the \verb!.! ends a sentence when following
-                        an uppercase letter. \\
-\verb!\hspace{!$l$\verb!}! & Horizontal space of length $l$
-                                (Ex: $l=\mathtt{20pt}$). \\
-\verb!\vspace{!$l$\verb!}! & Vertical space of length $l$. \\
-\verb!\rule{!$w$\verb!}{!$h$\verb!}! & Line of width $w$ and height $h$. \\
+\verb!~!        & 改行不可スペース（ex. \verb!W.J.~Clinton!）． \\
+\verb!\quad!    & 1 emのスペースを入れる． \\
+\verb!\qquad!   & 2 emのスペースを入れる． \\
+\verb!\hspace{!\Meta{長さ}\verb!}!
+               & 水平スペース． \\
+\verb!\vspace{!\Meta{長さ}\verb!}!
+               & 垂直スペース． \\
+\end{tabular}
+
+\subsection{その他}
+\settowidth{\MyLen}{\texttt{.rule.幅..高さ...} }
+\begin{tabular}{@{}p{\the\MyLen}%
+                @{}p{\linewidth-\the\MyLen}@{}}
+\verb!\today!  &  今の日付を出力．\verb!\西暦!, \verb!\和暦!で形式を変更可能． \\
+\verb!\@!      &  英大文字で終わる文のピリオド直前に記入． \\
+\verb!\rule{!\Meta{幅}\verb!}{!\Meta{高さ}\verb!}!
+               & 指定した寸法の線． \\
 \end{tabular}
 
 
+\section{表組み}
 
-\section{Tabular environments}
-
-\subsection{\texttt{tabbing} environment}
+\subsection{tabbing環境}
 \begin{tabular}{@{}l@{\hspace{1.5ex}}l@{\hspace{10ex}}l@{\hspace{1.5ex}}l@{}}
-\verb!\=!  &   Set tab stop. &
-\verb!\>!  &   Go to tab stop.
+\verb!\=!  &  タブ位置を設定． &
+\verb!\>!  &  次のタブ位置に移動．
 \end{tabular}
 
-Tab stops can be set on ``invisible'' lines with \verb!\kill!
-at the end of the line.  Normally \verb!\\! is used to separate lines.
+\verb!\kill!命令を用いると非表示行によってタブ位置を指定することができる．
+通常は \verb!\\! で行の終端を指定する．
 
+\subsection{tabular環境}
+\verb!\begin{array}[!\Meta{位置指定}\verb!]{!\Meta{列指定}\verb!}!   \\
+\verb!\begin{tabular}[!\Meta{位置指定}\verb!]{!\Meta{列指定}\verb!}! \\
+\verb!\begin{tabular*}{!\Meta{幅}\verb!}[!\Meta{位置指定}\verb!]{!\Meta{列指定}\verb!}!
 
-\subsection{\texttt{tabular} environment}
-\verb!\begin{array}[!\textit{pos}\verb!]{!\textit{cols}\verb!}!   \\
-\verb!\begin{tabular}[!\textit{pos}\verb!]{!\textit{cols}\verb!}! \\
-\verb!\begin{tabular*}{!\textit{width}\verb!}[!\textit{pos}\verb!]{!\textit{cols}\verb!}!
-
-
-\subsubsection{\texttt{tabular} column specification}
-\settowidth{\MyLen}{\texttt{p}\{\textit{width}\} \ }
+\subsubsection{列指定子}
+\settowidth{\MyLen}{\texttt{p}\{\Meta{区切り}\}..}
 \begin{tabular}{@{}p{\the\MyLen}@{}p{\linewidth-\the\MyLen}@{}}
-\texttt{l}    &   Left-justified column.  \\
-\texttt{c}    &   Centered column.  \\
-\texttt{r}    &   Right-justified column. \\
-\verb!p{!\textit{width}\verb!}!  &  Same as %
-                              \verb!\parbox[t]{!\textit{width}\verb!}!. \\ 
-\verb!@{!\textit{decl}\verb!}!   &  Insert \textit{decl} instead of
-                                    inter-column space. \\
-\verb!|!      &   Inserts a vertical line between columns. 
+\texttt{l}   &  左寄せの列． \\
+\texttt{c}   &  中央寄せの列． \\
+\texttt{r}   &  右寄せの列． \\
+\verb!p{!\Meta{幅}\verb!}!  
+             &  幅の寸法を指定した列． \\
+\verb!@{!\Meta{区切り}\verb!}!
+             &  隣り合う列の間に\Meta{区切り}を挟み込む． \\
+\verb!|!     &  表全体の縦罫線． 
 \end{tabular}
 
-
-\subsubsection{\texttt{tabular} elements}
+\subsubsection{要素}
 \settowidth{\MyLen}{\texttt{.cline.x-y..}}
 \begin{tabular}{@{}p{\the\MyLen}@{}p{\linewidth-\the\MyLen}@{}}
-\verb!\hline!           &  Horizontal line between rows.  \\
-\verb!\cline{!$x$\verb!-!$y$\verb!}!  &
-                        Horizontal line across columns $x$ through $y$. \\
-\verb!\multicolumn{!\textit{n}\verb!}{!\textit{cols}\verb!}{!\textit{text}\verb!}! \\
-        &  A cell that spans \textit{n} columns, with \textit{cols} column specification.
+\verb!\hline!           &  表全体の横罫線． \\
+\verb!\cline{!$x$\verb!-!$y$\verb!}!
+                        &  $x$列目から$y$列目までの横罫線．
 \end{tabular}
 
+\verb!\multicolumn{!\Meta{列数}\verb!}{!\Meta{列指定}\verb!}{!\Meta{テキスト}\verb!}!
+を用いると，\Meta{列数}個のセルを結合子たセルを作ることができる．
 
-\section{Math mode}
-To use math mode, surround text with \texttt{\$} or use
-\verb!\begin{equation}!.
+\section{数式モード}
+数式モードを使うには，該当箇所を `\verb!$!' で囲うかequation環境を用いる．
 
 \begin{tabular}{@{}l@{\hspace{1em}}l@{\hspace{2em}}l@{\hspace{1em}}l@{}}
-Superscript$^{x}$       &
+上付き$^{x}$            &
 \verb!^{x}!             &  
-Subscript$_{x}$         &
+下付き$_{x}$            &
 \verb!_{x}!             \\  
 $\frac{x}{y}$           &
 \verb!\frac{x}{y}!      &  
@@ -515,7 +469,7 @@ $\prod_{k=1}^n$         &
 \verb!\prod_{k=1}^n!    \\ 
 \end{tabular}
 
-\subsection{Math-mode symbols}
+\subsection{記号類}
 
 % The ordering of these symbols is slightly odd.  This is because I had to put all the
 % long pieces of text in the same column (the right) for it all to fit properly.
@@ -592,107 +546,87 @@ $\Phi$          &  \verb!\Phi!  &
 $\Psi$          &  \verb!\Psi!  &
 $\Omega$        &  \verb!\Omega!  
 \end{tabular}
-\footnotesize
 
-%\subsection{Special symbols}
-%\begin{tabular}{@{}ll@{}}
-%$^{\circ}$  &  \verb!^{\circ}! Ex: $22^{\circ}\mathrm{C}$: \verb!$22^{\circ}\mathrm{C}$!.
-%\end{tabular}
-
-\section{Bibliography and citations}
-When using \BibTeX, you need to run \texttt{latex}, \texttt{bibtex},
-and \texttt{latex} twice more to resolve dependencies.
-
-\subsection{Citation types}
-\settowidth{\MyLen}{\texttt{.shortciteN.key..}}
-\begin{tabular}{@{}p{\the\MyLen}@{}p{\linewidth-\the\MyLen}@{}}
-\verb!\cite{!\textit{key}\verb!}!       &
-        Full author list and year. (Watson and Crick 1953) \\
-\verb!\citeA{!\textit{key}\verb!}!      &
-        Full author list. (Watson and Crick) \\
-\verb!\citeN{!\textit{key}\verb!}!      &
-        Full author list and year. Watson and Crick (1953) \\
-\verb!\shortcite{!\textit{key}\verb!}!  &
-        Abbreviated author list and year. ? \\
-\verb!\shortciteA{!\textit{key}\verb!}! &
-        Abbreviated author list. ? \\
-\verb!\shortciteN{!\textit{key}\verb!}! &
-        Abbreviated author list and year. ? \\
-\verb!\citeyear{!\textit{key}\verb!}!   &
-        Cite year only. (1953) \\
+\section{目次と参考文献}
+\subsection{目次}
+\settowidth{\MyLen}{\texttt{.tableofcontents} }
+\begin{tabular}{@{}p{\the\MyLen}%
+                @{}p{\linewidth-\the\MyLen}@{}}
+\verb!\tableofcontents!  & 目次を印刷． \\
+\verb!\tableoffigures!   & 図目次を印刷． \\
+\verb!\tableoftables!    & 表目次を印刷． \\
 \end{tabular}
 
-All the above have an \texttt{NP} variant without parentheses;
-Ex. \verb!\citeNP!.
+目次を表示させるためには\texttt{platex}を複数回実行する必要がある．
 
-
-\subsection{\BibTeX\ entry types}
-\settowidth{\MyLen}{\texttt{.mastersthesis.}}
+\subsection{\BibTeX エントリータイプ}
+\settowidth{\MyLen}{\texttt{.mastersthesis} }
 \begin{tabular}{@{}p{\the\MyLen}@{}p{\linewidth-\the\MyLen}@{}}
-\verb!@article!         &  Journal or magazine article. \\
-\verb!@book!            &  Book with publisher. \\
-\verb!@booklet!         &  Book without publisher. \\
-\verb!@conference!      &  Article in conference proceedings. \\
-\verb!@inbook!          &  A part of a book and/or range of pages. \\
-\verb!@incollection!    &  A part of book with its own title. \\
-%\verb!@manual!          &  Technical documentation. \\
+\verb!@article!         &  論文や雑誌の記事． \\
+\verb!@book!            &  発行主体が明確な書籍． \\
+\verb!@booklet!         &  発行主体が不明確な書籍． \\
+\verb!@conference!      &  会議の議事録． \\
+\verb!@inbook!          &  書籍の一部． \\
+\verb!@incollection!    &  書籍に収録されている文書． \\
+\verb!@manual!          &  マニュアル文書． \\
 %\verb!@mastersthesis!   &  Master's thesis. \\
-\verb!@misc!            &  If nothing else fits. \\
-\verb!@phdthesis!       &  PhD. thesis. \\
-\verb!@proceedings!     &  Proceedings of a conference. \\
-\verb!@techreport!      &  Tech report, usually numbered in series. \\
-\verb!@unpublished!     &  Unpublished. \\
+\verb!@misc!            &  その他． \\
+\verb!@phdthesis!       &  博士論文． \\
+\verb!@techreport!      &  技術報告書． \\
+\verb!@unpublished!     &  未出版の文献． \\
 \end{tabular}
 
-\subsection{\BibTeX\ fields}
+\BibTeX を利用する場合\texttt{platex}, \texttt{jbibtex}を順番に実行し，さらに\texttt{platex}
+を複数回実行する必要がある．
+
+\subsection{\BibTeX フィールド}
 \settowidth{\MyLen}{\texttt{organization.}}
 \begin{tabular}{@{}p{\the\MyLen}@{}p{\linewidth-\the\MyLen}@{}}
-\verb!address!         &  Address of publisher.  Not necessary for major
-                                publishers.  \\
-\verb!author!           &  Names of authors, of format .... \\
-\verb!booktitle!        &  Title of book when part of it is cited. \\
-\verb!chapter!          &  Chapter or section number. \\
-\verb!edition!          &  Edition of a book. \\
-\verb!editor!           &  Names of editors. \\
-\verb!institution!      &  Sponsoring institution of tech.\ report. \\
-\verb!journal!          &  Journal name. \\
-\verb!key!              &  Used for cross ref.\ when no author. \\
-\verb!month!            &  Month published. Use 3-letter abbreviation. \\
-\verb!note!             &  Any additional information. \\
-\verb!number!           &  Number of journal or magazine. \\
-\verb!organization!     &  Organization that sponsors a conference. \\
-\verb!pages!            &  Page range (\verb!2,6,9--12!). \\
-\verb!publisher!        &  Publisher's name. \\
-\verb!school!           &  Name of school (for thesis). \\
-\verb!series!           &  Name of series of books. \\
-\verb!title!            &  Title of work. \\
-\verb!type!             &  Type of tech.\ report, ex. ``Research Note''. \\
-\verb!volume!           &  Volume of a journal or book. \\
-\verb!year!             &  Year of publication. \\
+\verb!address!          &  出版社の所在地 \\
+\verb!author!           &  著者名．姓と名の間にスペースを入れる． \\
+\verb!booktitle!        &  文献を含んでいる書籍等のタイトル． \\
+\verb!chapter!          &  参照した章などの番号． \\
+\verb!edition!          &  文献の版． \\
+\verb!editor!           &  編集者名．書式は\verb!author!と同じ． \\
+\verb!institution!      &  技術報告書の母体組織． \\
+\verb!journal!          &  雑誌名． \\
+\verb!key!              &  \verb!author!がない場合，ソートに用いる． \\
+\verb!month!            &  出版月（未出版の場合は作成月）． \\
+\verb!note!             &  任意の補足説明． \\
+\verb!number!           &  学術雑誌などの号数． \\
+\verb!organization!     &  会議の主催機関やマニュアルの発行機関． \\
+\verb!pages!            &  参照したページの範囲． \\
+\verb!publisher!        &  出版社名． \\
+\verb!school!           &  学校名． \\
+\verb!series!           &  文献のシリーズ名． \\
+\verb!title!            &  文献のタイトル． \\
+\verb!type!             &  文献の分類名． \\
+\verb!volume!           &  書籍や雑誌の巻数． \\
+\verb!year!             &  出版年（未出版の場合は作成年）． \\
 \end{tabular}
-Not all fields need to be filled.  See example below.
+これらのフィールドはすべて記入されていなくてもよい．
 
-\subsection{Common \BibTeX\ style files}
-\begin{tabular}{@{}l@{\hspace{1em}}l@{\hspace{3em}}l@{\hspace{1em}}l@{}}
-\verb!abbrv!    &  Standard &
-\verb!abstract! &  \texttt{alpha} with abstract \\
-\verb!alpha!    &  Standard &
-\verb!apa!      &  APA \\
-\verb!plain!    &  Standard &
-\verb!unsrt!    &  Unsorted \\
+\subsection{一般的な\BibTeX スタイルファイル}
+\settowidth{\MyLen}{\texttt{jabbrv} }
+\begin{tabular}{@{}p{\the\MyLen}@{}p{\linewidth-\the\MyLen}@{}}
+\verb!jplain!  &  標準のスタイル． \\
+\verb!jabbrv!  &  著者名を省略形にする． \\
+\verb!jalpha!  &  文献番号を「筆頭著者の省略形＋発行年の省略形」の形にする． \\
+\verb!junsrt!  &  文献を並び替えずに，言及順に掲載する． \\
 \end{tabular}
 
-The \LaTeX\ document should have the following two lines just before
-\verb!\end{document}!, where \verb!bibfile.bib! is the name of the
-\BibTeX\ file.
-\begin{verbatim}
-\bibliographystyle{plain}
-\bibliography{bibfile}
-\end{verbatim}
+\BibTeX を利用する場合，\LaTeX 文書には次の2行が \verb!\end{document}! の直前に記入されて
+いる必要がある．
+%
+\begin{flushleft}
+\verb!\bibliographystyle{!\Meta{\BibTeX スタイルファイル}\verb!}! \\
+\verb!\bibliography{!\Meta{文献データベースファイル}\verb!}!
+\end{flushleft}
 
-\subsection{\BibTeX\ example}
-The \BibTeX\ database goes in a file called
-\textit{file}\texttt{.bib}, which is processed with \verb!bibtex file!. 
+\subsection{文献データベースのサンプル}
+文献データベースは拡張子が ``\texttt{.bib}'' のファイルに記述し，これを
+\texttt{bibtex}コマンドによって処理する．
+%
 \begin{verbatim}
 @String{N = {Na\-ture}}
 @Article{WC:1953,
@@ -706,49 +640,49 @@ The \BibTeX\ database goes in a file called
 \end{verbatim}
 
 
-\section{Sample \LaTeX\ document}
+\section{\LaTeX 文書のサンプル}
 \begin{verbatim}
-\documentclass[11pt]{article}
-\usepackage{fullpage}
-\title{Template}
-\author{Name}
+\documentclass[11pt]{jarticle}
+\title{テンプレート}
+\author{氏名}
 \begin{document}
 \maketitle
 
-\section{section}
-\subsection*{subsection without number}
-text \textbf{bold text} text. Some math: $2+2=5$
-\subsection{subsection}
-text \emph{emphasized text} text. \cite{WC:1953}
-discovered the structure of DNA.
+\section{節}
+\subsection*{番号のない小節}
+テキスト\textbf{太字}テキスト．数式の例：$2+2=5$
 
-A table:
+\subsection{小節}
+テキスト\emph{強調されたテキスト}テキスト．\cite{WC:1953}
+
+表組みの例：
 \begin{table}[!th]
+\centering
+\caption{表の説明．}
+\label{tab:sample}
 \begin{tabular}{|l|c|r|}
 \hline
 first  &  row  &  data \\
 second &  row  &  data \\
 \hline
 \end{tabular}
-\caption{This is the caption}
-\label{ex:table}
 \end{table}
 
-The table is numbered \ref{ex:table}.
+表\ref{tab:sample}を参照する．
 \end{document}
 \end{verbatim}
-
 
 
 \rule{0.3\linewidth}{0.25pt}
 \scriptsize
 
-Copyright \copyright\ 2006 Winston Chang
+\LaTeXe 版 \copyright\ 2006 Winston Chang \\
+\url{http://www.stdout.org/~winston/latex/} \\
+p\LaTeXe 版 \copyright\ 2017 Takuto Asakura \\
+\url{https://wtsnjp.com/pdf/platexsheet.pdf}
 
 % Should change this to be date of file, not current date.
-\verb!$Revision: 1.13 $, $Date: 2008/05/29 06:11:56 $.!
-
-http://www.stdout.org/$\sim$winston/latex/
+\texttt{バージョン：1.0, 作成日：2017/01/01}
 
 
 \end{multicols}
