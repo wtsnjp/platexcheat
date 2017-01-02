@@ -33,10 +33,9 @@
                                 {\normalfont\small\bfseries}}
 
 %% ユーザ用マクロ
-\newcommand{\Meta}[1]{$\langle$\mbox{}\textit{#1}\mbox{}$\rangle$}
+\newcommand{\Meta}[1]{$\langle$\mbox{}\emph{#1}\mbox{}$\rangle$}
 \newcommand{\psp}{\phantom{ }}
-\newcommand{\BibTeX}{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
-    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\newcommand{\BibTeX}{\textnormal{\textsc{Bib}\TeX}}
 
 \makeatother
 
@@ -88,7 +87,7 @@
 書式：\verb!\documentclass[!\Meta{オプション}\verb!]{!\Meta{クラス}\verb!}!.
 
 \subsection{パッケージ}
-\verb!\documentclass!と \verb!\begin{document}! の間（プリアンブル）で
+\verb!\documentclass{!\Meta{クラス}\verb!}! と \verb!\begin{document}! の間（プリアンブル）で
 \verb!\usepackage[!\Meta{オプション}\verb!]{!\Meta{パッケージ}\verb!}! を
 記述して読み込む．
 
@@ -132,7 +131,6 @@
 \settowidth{\MyLen}{\texttt{.begin.quotation..}}
 \begin{tabular}{@{}p{\the\MyLen}%
                 @{}p{\linewidth-\the\MyLen}@{}}
-\verb!\begin{comment}!    &  コメントブロック（印字されない）． \\
 \verb!\begin{quote}!      &  短い引用（段落の字下げなし）． \\
 \verb!\begin{quotation}!  &  長文の引用． \\
 \verb!\begin{verse}!      &  詩の引用．
@@ -306,7 +304,7 @@
 \=o   & \verb!\=o! \\
 \.o   & \verb!\.o! &
 \"o   & \verb!\"o! &
-\c o  & \verb!\c o! &
+\u o  & \verb!\u o! &
 \v o  & \verb!\v o! &
 \H o  & \verb!\H o! \\
 \c c  & \verb!\c c! &
@@ -325,7 +323,8 @@
 \L    & \verb!\L! &
 \i    & \verb!\i! \\
 \j    & \verb!\j! &
-!`    & \verb!~`! &
+\ss   & \verb!\ss! &
+!`    & \verb|!`| &
 ?`    & \verb!?`! &
 \end{tabular}
 
@@ -360,7 +359,6 @@ em-dash  & \verb!---! & Yes---or no?   & 挿入句の導入など．
 \verb!\par!       & 改段落．単に空白行を挟んでも同じ． \\
 \verb!\\!         & 強制改行（段落は維持）． \\
 \verb!\\*!        & 改ページを伴わない強制改行． \\
-\verb!\kill!      & 現在行を印刷しない． \\
 \verb!\newpage!   & 強制改ページ（二段組左段の場合は右段に移る）． \\
 \verb!\clearpage! & まだ出力していない図表をすべて出力して改ページ． \\
 \verb!\noindent!  & 現在行をインデントしない．
@@ -660,7 +658,7 @@ second &  row  &  data \\
 p\LaTeXe 版 {\copyright} 2017 Takuto Asakura \\
 \url{https://wtsnjp.com/pdf/platexsheet.pdf}
 
-バージョン：1.0, 作成日：2017/01/01
+バージョン：1.1, 作成日：2017/01/03
 
 \end{multicols}
 \end{document}
