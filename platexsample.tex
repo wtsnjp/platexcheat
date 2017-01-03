@@ -1,0 +1,28 @@
+\documentclass[11pt]{jarticle}
+\title{テンプレート}
+\author{氏名}
+\begin{document}
+\maketitle
+
+\section{節}
+\subsection*{番号のない小節}
+テキスト\textbf{太字}テキスト．数式の例：$2+2=5$
+
+\subsection{小節}
+テキスト\emph{強調されたテキスト}テキスト．\cite{WC:1953}
+
+表組みの例：
+\begin{table}[!th]
+\centering
+\caption{表の説明．}
+\label{tab:sample}
+\begin{tabular}{|l|c|r|}
+\hline
+first  &  row  &  data \\
+second &  row  &  data \\
+\hline
+\end{tabular}
+\end{table}
+
+表\ref{tab:sample}を参照する．
+\end{document}

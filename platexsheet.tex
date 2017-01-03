@@ -1,75 +1,94 @@
-% タイプセット：ptex2pdf -l latexsheet.tex
+% typeset: ptex2pdf -l latexsheet.tex
 \documentclass[10pt,a4paper,landscape]{jarticle}
 
 % 使用パッケージ
+\usepackage[small]{titlesec}
 \usepackage{geometry}
 \usepackage{multicol}
+\usepackage{listings}
+\usepackage{jlisting}
+\usepackage{shortvrb}
 \usepackage{calc}     % いずれ除去
 \usepackage{otf}
 \usepackage{url}
 
-% 設定
+% ドキュメント設定
+%% ページ
 \geometry{top=1cm, left=1cm, right=1cm, bottom=1cm}
 \pagestyle{empty}
+
+%% 見出し
 \setcounter{secnumdepth}{0}
+\titlespacing{\section}{0pt}{5pt}{0pt}
+\titlespacing{\subsection}{0pt}{0pt}{0pt}
+\titlespacing{\subsubsection}{0pt}{0pt}{0pt}
+
+%% 寸法
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt plus 0.5ex}
 
-% マクロ定義
-\makeatletter
+%% リスト
+\MakeShortVerb{\|}
+\lstset{
+  language={[LaTeX]TeX},
+  basicstyle={\small\ttfamily},
+  commentstyle={\small\itshape},
+  keywordstyle={\small\ttfamily\bfseries},
+  columns=[l]{fullflexible}}
 
-%% 見出し命令の再定義（必要スペースを縮小）
-\renewcommand{\section}{\@startsection{section}{1}{0mm}%
-                                {-1ex plus -.5ex minus -.2ex}%
-                                {0.5ex plus .2ex}%x
-                                {\normalfont\large\bfseries}}
-\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
-                                {-1explus -.5ex minus -.2ex}%
-                                {0.5ex plus .2ex}%
-                                {\normalfont\normalsize\bfseries}}
-\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
-                                {-1ex plus -.5ex minus -.2ex}%
-                                {1ex plus .2ex}%
-                                {\normalfont\small\bfseries}}
+% マクロ定義
+%% 列挙用テーブル
+\makeatletter
+\def\set@etsep#1#2{\def\etcolsep{#1}\def\etitemsep{#2}}
+\newenvironment{entable}[3][\quad\qquad]{\set@etsep#1\relax\relax
+  \begin{tabular}{@{}*{\the\numexpr#3-1}{*{#2}{l@{\etcolsep}}@{\etitemsep}}*{#2}{l}@{}}}{%
+  \end{tabular}}
+\makeatother
 
 %% ユーザ用マクロ
+\chardef\vbar=`\|
 \newcommand{\Meta}[1]{$\langle$\mbox{}\emph{#1}\mbox{}$\rangle$}
-\newcommand{\psp}{\phantom{ }}
+\newcommand{\psp}{\phantom{ }}                                       % いずれ除去
 \newcommand{\BibTeX}{\textnormal{\textsc{Bib}\TeX}}
-
-\makeatother
 
 % -----------------------------------------------------------------------
 
 \begin{document}
 
-\footnotesize
+% 三段組を開始
 \begin{multicols}{3}
-
 \setlength{\premulticols}{1pt}
 \setlength{\postmulticols}{1pt}
 \setlength{\multicolsep}{1pt}
 \setlength{\columnsep}{2pt}
 
+% 文字サイズ
+\footnotesize
+
+% タイトル
 \begin{center}
-\Large{\textbf{p\LaTeXe\ チートシート}} \\
+\Large
+\textbf{p\LaTeXe チートシート}
 \end{center}
 
-\section{標準クラス}
-\begin{tabular}{@{}ll@{}}
-\verb!jbook!    & 横書き書籍用．デフォルトで偶奇ページの区別あり． \\
-\verb!jreport!  & 横書きレポート用．\verb!\part! なし． \\
-\verb!jarticle! & 横書き論文用．\verb!\part!と \verb!\chapter!なし． \\
-\verb!tbook!    & 縦書き書籍用．デフォルトで偶奇ページの区別あり． \\
-\verb!treport!  & 縦書きレポート用．\verb!\part! なし． \\
-\verb!tarticle! & 縦書き論文用．\verb!\part!と \verb!\chapter!なし． \\
-\end{tabular}
-	
-ドキュメントの冒頭付近でクラスを宣言：
-\verb!\documentclass{!\Meta{クラス}\verb!}!．
-\verb!\begin{document}! で内容を開始し \verb!\end{document}! で文書を終える．
+\section{プリアンブル}
+
+文書はクラス宣言で開始：
+|\documentclass[|\Meta{オプション}|]{|\Meta{クラス}|}|．
+|\begin{document}| で本文を開始し，|\end{document}| で本文を終える．
+|\documentclass| から |\begin{document}| までは\emph{プリアンブル}と呼ばれ\linebreak
+パッケージの読み込みや文書全体に適用する設定などを記述する．
+
+\subsection{標準クラス}
+
+\begin{entable}{2}{2}
+|jbook| & 横書き書籍 & |tbook| & 縦書き書籍 \\
+|jarticle| & 横書き論文 & |tarticle| & 縦書き論文 \\
+|jreport| & 横書きレポート & |treport| & 縦書きレポート \\
+\end{entable}
 
 \subsection{主なクラスオプション}
+
 \newlength{\MyLen}
 \settowidth{\MyLen}{\texttt{a4paper}/\texttt{b5paper} \ }
 \begin{tabular}{@{}p{\the\MyLen}%
@@ -145,7 +164,7 @@
 \verb!\begin{description}!      &  説明付き箇条書き． \\
 \verb!\item! \Meta{テキスト}    &  箇条書きの項目． \\
 \verb!\item[!\Meta{ラベル}\verb!]!\Meta{テキスト}
-                                &  ラベルを直接指定（\texttt{description}では必須）． \\
+                                &  ラベルを直接指定（\texttt{description}は必須）． \\
 \end{tabular}
 
 \subsection{相互参照と脚注}
@@ -206,9 +225,6 @@
 \verb!\textsc{!\Meta{テキスト}\verb!}!                    & %
         \verb!{\scshape !\Meta{テキスト}\verb!}!               & %
         \textsc{Small Caps shape} \\
-%\verb!\textnormal{!\Meta{テキスト}\verb!}!\psp            & %
-%        \verb!{\normalfont !\Meta{テキスト}\verb!}!\psp        & %
-%        \textnormal{Document font} \\
 \verb!\textmc{!\Meta{テキスト}\verb!}!\psp                & %
         \verb!{\mcfamily !\Meta{テキスト}\verb!}!\psp           & %
         \textmc{明朝体} \\
@@ -217,7 +233,7 @@
         \textgt{ゴシック体} \\
 \end{tabular}
 
-\verb!\textit!のようなコマンドを使った方 (t\textit{tt}t) が \verb|\itshape| のような宣言による
+\verb!\textit!のようなコマンドを使った方 (t\textit{tt}t) が \verb!\itshape! のような宣言による
 書体変更を行う (t{\itshape tt}t) よりも空白がきれいに入る．\verb!\normalfont!,
 \verb!\textnormal{!\Meta{テキスト}\verb!}! を用いると，ファミリ・シリーズ・シェイプを同時に
 デフォルト設定へ戻すことができる．
@@ -296,7 +312,7 @@
 \end{tabular}
 
 \subsection{アクセント記号}
-\begin{tabular}{@{}l@{\ }l|l@{\ }l|l@{\ }l|l@{\ }l|l@{\ }l@{}}
+\begin{tabular}{@{}l@{\ }ll@{\ }ll@{\ }ll@{\ }ll@{\ }l@{}}
 \`o   & \verb!\`o! &
 \'o   & \verb!\'o! &
 \^o   & \verb!\^o! &
@@ -324,7 +340,7 @@
 \i    & \verb!\i! \\
 \j    & \verb!\j! &
 \ss   & \verb!\ss! &
-!`    & \verb|!`| &
+!`    & \verb+!`+ &
 ?`    & \verb!?`! &
 \end{tabular}
 
@@ -407,14 +423,14 @@ em-dash  & \verb!---! & Yes---or no?   & 挿入句の導入など．
 \subsubsection{列指定子}
 \settowidth{\MyLen}{\texttt{p}\{\Meta{区切り}\}..}
 \begin{tabular}{@{}p{\the\MyLen}@{}p{\linewidth-\the\MyLen}@{}}
-\texttt{l}   &  左寄せの列． \\
-\texttt{c}   &  中央寄せの列． \\
-\texttt{r}   &  右寄せの列． \\
+\texttt{l}     &  左寄せの列． \\
+\texttt{c}     &  中央寄せの列． \\
+\texttt{r}     &  右寄せの列． \\
 \verb!p{!\Meta{幅}\verb!}!  
-             &  幅の寸法を指定した列． \\
+               &  幅の寸法を指定した列． \\
 \verb!@{!\Meta{区切り}\verb!}!
-             &  隣り合う列の間に\Meta{区切り}を挟み込む． \\
-\verb!|!     &  表全体の縦罫線． 
+               &  隣り合う列の間に\Meta{区切り}を挟み込む． \\
+\texttt{\vbar} &  表全体の縦罫線． 
 \end{tabular}
 
 \subsubsection{要素}
@@ -618,37 +634,7 @@ $\Omega$        &  \verb!\Omega!
 
 
 \section{\LaTeX 文書のサンプル}
-\begin{verbatim}
-\documentclass[11pt]{jarticle}
-\title{テンプレート}
-\author{氏名}
-\begin{document}
-\maketitle
-
-\section{節}
-\subsection*{番号のない小節}
-テキスト\textbf{太字}テキスト．数式の例：$2+2=5$
-
-\subsection{小節}
-テキスト\emph{強調されたテキスト}テキスト．\cite{WC:1953}
-
-表組みの例：
-\begin{table}[!th]
-\centering
-\caption{表の説明．}
-\label{tab:sample}
-\begin{tabular}{|l|c|r|}
-\hline
-first  &  row  &  data \\
-second &  row  &  data \\
-\hline
-\end{tabular}
-\end{table}
-
-表\ref{tab:sample}を参照する．
-\end{document}
-\end{verbatim}
-
+\lstinputlisting{platexsample.tex}
 
 \rule{.3\linewidth}{.25pt}
 \scriptsize
