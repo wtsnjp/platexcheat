@@ -1,28 +1,33 @@
-\documentclass[11pt]{jarticle}
-\title{テンプレート}
-\author{氏名}
+\documentclass[dvipdfmx,11pt]{jarticle}
+\usepackage{otf,hyperref}
+\title{p\LaTeXe をもっと便利に}
+\author{朝倉卓人\thanks{\texttt{wtsnjp@gmail.com}}}
+
 \begin{document}
 \maketitle
 
-\section{節}
-\subsection*{番号のない小節}
-テキスト\textbf{太字}テキスト．数式の例：$2+2=5$
+\section{発展的なp\LaTeXe の利用法}
+\subsection{マクロ}
+本シートで紹介しているのはp\LaTeXe 標準の命令や環境
+ばかりだがp\LaTeXe にはユーザ独自の\emph{マクロ}を
+定義するしくみがある．
 
-\subsection{小節}
-テキスト\emph{強調されたテキスト}テキスト．\cite{WC:1953}
+\subsection{p\LaTeXe 関連の情報や成果物を入手する}
+近年人気の\TeX ディストリビューション（\TeX\ Liveなど）
+を利用している場合は，自力で入手しなくとも数多くのクラスや
+パッケージ最初からインストールされている．より多くの情報や
+成果物が必要な場合は表\ref{表：サイト集}のサイトを訪れる．
 
-表組みの例：
-\begin{table}[!th]
+\begin{table}[bth!]
 \centering
-\caption{表の説明．}
-\label{tab:sample}
-\begin{tabular}{|l|c|r|}
-\hline
-first  &  row  &  data \\
-second &  row  &  data \\
-\hline
+\caption{\emph{便利なサイト}．英語のサイトも含む．}
+\label{表：サイト集}
+\begin{tabular}{ll}
+\emph{サイト名} & \emph{説明} \\ \hline
+\href{https://www.ctan.org/}{CTAN} 
+  & 世界から\TeX 関連成果物が集められている． \\
+\href{https://texwiki.texjp.org/}{{\TeX} Wiki}
+  & \TeX に関する日本語情報が集積． \\
 \end{tabular}
 \end{table}
-
-表\ref{tab:sample}を参照する．
 \end{document}
