@@ -27,7 +27,7 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt plus 0.5ex}
 
-%% リスト
+%% コード
 \MakeShortVerb{\|}
 \lstset{
   language={[LaTeX]TeX},
@@ -44,10 +44,11 @@
   \begin{tabular}{%
     @{}*{\the\numexpr#3-1}{*{#2}{l@{\etcolsep}}@{\etitemsep}}*{#2}{l@{\etcolsep}}@{}}}{%
   \end{tabular}}
+\newcommand{\mergecol}[2]{\multicolumn{#1}{@{}l@{}}{#2}}
 \makeatother
 
 %% ユーザ用マクロ
-\chardef\vbar=`\|
+\chardef\vbar=`\| \chardef\bs=`\\
 \newcommand{\Meta}[1]{$\langle$\mbox{}\emph{#1}\mbox{}$\rangle$}
 \newcommand{\psp}{\phantom{ }}                                       % いずれ除去
 \newlength{\MyLen}                                                   % いずれ除去
@@ -76,29 +77,31 @@
 \section{p\LaTeXe の基本}
 
 \begin{entable}{2}{1}
-制御綴 & \LaTeX の命令．必須引数は |{}|，省略可能な引数は |[]| で囲う． \\
-環境 & |\begin{|\Meta{環境名}|}| と |\end{|\Meta{環境名}|}| に挟まれた部分．
+制御綴 & \LaTeX の命令．必須引数は |{}| 省略可能な引数は |[]| で囲う \\
+環境 & |\begin{|\Meta{環境名}|}| と |\end{|\Meta{環境名}|}| に挟まれた部分 \\
+コメント & 記号 `|%|' を書くと，以降行末までコメントとして無視される
 \end{entable}
+
+すべてではないが，多くの命令や環境は入れ子にできる．
 
 \subsection{長さの単位}
 
-\begin{entable}{2}{1}
-|cm|/|mm|/|in| & 一般的な長さの単位（$\SI{1}{in}=\SI{25.4}{mm}$） \\
-|pt|/|bp|/|sp| & ポイント（$\SI{72.27}{pt}=\SI{72}{bp}=\SI{65536}{sp}=\SI{1}{in}$） \\
-|Q|/|H| & 級と歯（$\SI{1}{Q}=\SI{1}{H}=\SI{0.25}{mm}$） \\
-\end{entable}
-%
 \begin{entable}{2}{2}
+|cm|/|mm|/|in|
+  & \mergecol{3}{一般的な長さの単位（$\SI{1}{in}=\SI{25.4}{mm}$）} \\
+|pt|/|bp|/|sp|
+  & \mergecol{3}{ポイント（$\SI{72.27}{pt}=\SI{72}{bp}=\SI{65536}{sp}=\SI{1}{in}$）} \\
+|Q|/|H|
+  & \mergecol{3}{級と歯（$\SI{1}{Q}=\SI{1}{H}=\SI{0.25}{mm}$）} \\
 |em|/|ex|\phantom{/|pt|} & |M| の幅と |x| の高さ & |zw|/|zh| & 和文文字の幅と高さ \\
 \end{entable}
 
 \section{プリアンブル}
 
 文書はクラス宣言で開始：
-|\documentclass[|\Meta{オプション}|]{|\Meta{クラス}|}|．
-|\begin{document}| で本文を開始し，|\end{document}| で本文を終える．
-|\documentclass| から |\begin{document}| までは\emph{プリアンブル}と呼ばれ\linebreak
-パッケージの読み込みや文書全体に適用する設定などを記述する．
+|\documentclass[|\Meta{オプション}|]{|\Meta{クラス}|}|．\linebreak
+本文はdocument環境に記述．|\documentclass| と |\begin{document}| の間は
+\emph{プリアンブル}と呼ばれ，文書全体に適用する設定などを記述する．
 
 \subsection{標準クラス}
 
@@ -113,24 +116,24 @@
 \subsection{主な標準クラスオプション}
 
 \begin{entable}[\enspace\quad]{2}{2}
-\multicolumn{4}{@{}l@{}}{%
+\mergecol{4}{%
   |a4paper|/|a5paper|/|b4paper|/|b5paper|\enspace 用紙サイズ（B系列はJIS規格）} \\
-|a4j|/|a5j|/|b4j|/|b5j| & 上記より余白が狭い & |landscape| & 用紙を横向きに \\
+|a4j|/|a5j|/|b4j|/|b5j| & 上記より余白が狭い & |landscape| & 用紙を横向き \\
 |10pt|/|11pt|/|12pt| & 文字サイズ & |twocolumn| & 二段組 \\
 |titlepage| & タイトルを独立ページ & |twoside| & 両面印刷 \\
-|leqno| & 数式番号を右に表示 & |dvipdfmx| & dviドライバ \\
+|leqno| & 数式番号を左側に表示 & |dvipdfmx| & dviドライバ \\
 |fleqn| & 別行立て数式を左寄せ & |tombo| & トンボを表示 \\
 \end{entable}
 
 クラスオプションに指定したものは読み込んだパッケージへも適用される．
 
 \subsection{文書情報}
-\begin{entable}[\enspace]{2}{1}
-|\author{|\Meta{著者}|}| & 文書の著者．複数のときは |\and| で区切る \\
-|\thanks{|\Meta{注釈}|}| & 著者名に脚注（主に所属機関）を付ける \\
-\end{entable}
-%
+
 \begin{entable}[\enspace\quad]{2}{2}
+|\author{|\Meta{著者}|}|
+  & \mergecol{3}{文書の著者．複数のときは \texttt{\bs and} で区切る} \\
+|\thanks{|\Meta{注釈}|}|
+  & \mergecol{3}{著者名に脚注（主に所属機関）を付ける} \\
 |\title{|\Meta{タイトル}|}| & 文書のタイトル & |\date{|\Meta{日付}|}| & 文書の作成日 \\
 \end{entable}
 
@@ -150,164 +153,119 @@
 \subsection{その他}
 
 \begin{entable}{2}{1}
-|\usepackage[|\Meta{オプション}|]{|\Meta{パッケージ}|}| & パッケージの読み込み \\
-|\setcounter{|\Meta{カウンタ名}|}{|\Meta{数値}|}| & カウンタを設定 \\
+|\usepackage[|\Meta{オプション}|]{|\Meta{パッケージ}|}| & パッケージ読み込み \\
+|\setcounter{|\Meta{カウンタ}|}{|\Meta{数値}|}| & カウンタの値を設定 \\
 |\setlength{|\Meta{寸法を表す制御綴}|}{|\Meta{長さ}|}| & 寸法を設定 \\
-|\newcommand{|\Meta{制御綴}|}[|\Meta{引数}|]{|\Meta{定義}|}| & マクロの定義 \\
+|\newcommand{|\Meta{制御綴}|}[|\Meta{引数の数}|]{|\Meta{定義}|}| & マクロの定義 \\
 |\newenvironment{|\Meta{環境名}|}{|\Meta{開始}|}{|\Meta{終了}|}| & 環境の定義 \\
 \end{entable}
 
 |\usepackage| はプリアンブルのみで利用可．他の命令は中級者以上向け．
 
-\section{文書構造}
-\begin{multicols}{2}
-\verb!\part{!\Meta{タイトル}\verb!}!  \\
-\verb!\chapter{!\Meta{タイトル}\verb!}!  \\
-\verb!\section{!\Meta{タイトル}\verb!}!  \\
-\verb!\subsection{!\Meta{タイトル}\verb!}!  \\
-\verb!\subsubsection{!\Meta{タイトル}\verb!}!  \\
-\verb!\paragraph{!\Meta{タイトル}\verb!}!  \\
-\verb!\subparagraph{!\Meta{タイトル}\verb!}!
-\end{multicols}
-{\raggedright
-上記の命令の後ろに \texttt{*} を付けた場合（例えば \verb!\section*{!\Meta{タイトル}\verb!}!），
-見出し番号は出力されない．\verb!\setcounter{secnumdepth}{!$x$\verb!}! により深さが$x$までの
-見出しにデフォルトで番号が付くように設定できる．
-}
+\section{文書の論理構造}
 
-\subsection{テキスト環境}
-\settowidth{\MyLen}{\texttt{.begin.quotation..}}
-\begin{tabular}{@{}p{\the\MyLen}%
-                @{}p{\linewidth-\the\MyLen}@{}}
-\verb!\begin{quote}!      &  短い引用（段落の字下げなし）． \\
-\verb!\begin{quotation}!  &  長文の引用． \\
-\verb!\begin{verse}!      &  詩の引用．
-\end{tabular}
+%\subsection{見出し}
 
-\subsection{リスト}
-\settowidth{\MyLen}{\texttt{.item.ラベル.テキスト..} }
-\begin{tabular}{@{}p{\the\MyLen}%
-                @{}p{\linewidth-\the\MyLen}@{}}
-\verb!\begin{itemize}!          &  箇条書き． \\
-\verb!\begin{enumerate}!        &  連番付き箇条書き． \\
-\verb!\begin{description}!      &  説明付き箇条書き． \\
-\verb!\item! \Meta{テキスト}    &  箇条書きの項目． \\
-\verb!\item[!\Meta{ラベル}\verb!]!\Meta{テキスト}
-                                &  ラベルを直接指定（\texttt{description}は必須）． \\
-\end{tabular}
+\begin{entable}[\enspace\enspace]{2}{3}
+|\part| & 部 & |\chapter| & 章 & |\section| & 節 \\
+|\subsection| & 小節 & |\subsubsection| & 小々節 & |\pragraph| & 段落 \\
+|\subpragraph| & 小段落 \\
+\end{entable}
 
-\subsection{相互参照と脚注}
-\settowidth{\MyLen}{\texttt{.footnote.テキスト..} }
-\begin{tabular}{@{}p{\the\MyLen}%
-                @{}p{\linewidth-\the\MyLen}@{}}
-\verb!\label{!\Meta{マーカ}\verb!}!      &  相互参照用のマーカをセット． \\
-\verb!\ref{!\Meta{マーカ}\verb!}!        &  マーカの位置（節番号など）を出力． \\
-\verb!\pageref{!\Meta{マーカ}\verb!}!    &  マーカのページ番号を出力． \\
-\verb!\footnote{!\Meta{テキスト}\verb!}! &  ページ下部に脚注を出力． \\
-\end{tabular}
+これらの命令は共通の書式をもつ：\Meta{制御綴}|[|\Meta{目次用の見出し}|]{|\Meta{見出し}|}|．
+\Meta{制御綴}の直後に |*| を付けた場合，見出し番号が付かず目次にも載らない．
+
+\subsection{箇条書き}
+
+\begin{entable}[\enspace\quad]{2}{2}
+|\begin{itemize}| & 記号付き & |\begin{enumerate}| & 連番付き \\
+|\begin{description}| & 見出し付き \\
+\end{entable}
+
+各項目は上記の環境中で |\item |\Meta{テキスト} で表現．|\item[|\Meta{ラベル}|]|\linebreak
+のようにすると当該項目のラベルのみを変更（description環境では必須）．
 
 \subsection{フロート}
-\settowidth{\MyLen}{\texttt{.begin.equation.位置指定.} }
-\begin{tabular}{@{}p{\the\MyLen}%
-                @{}p{\linewidth-\the\MyLen}@{}}
-\verb!\begin{table}[!\Meta{位置指定}\verb!]!     &  表扱いするもの． \\
-\verb!\begin{figure}[!\Meta{位置指定}\verb!]!    &  図扱いするもの． \\
-\verb!\caption{!\Meta{テキスト}\verb!}!      &  キャプションを付ける． \\
-\end{tabular}
 
-\Meta{位置指定}に次の文字の組み合わせを指定することでフロートの挿入位置を制御することが
-できる：\texttt{t}=ページ上部，\texttt{b}=ページ下部，\texttt{p}=独立ページ，
-\texttt{h}=その場，\texttt{!}=条件が悪くても指定位置に配置．
+\begin{entable}[\enspace\enspace]{2}{2}
+|\begin{figure}[|\Meta{位置指定}|]| & 図 & |\begin{table}[|\Meta{位置指定}|]| & 表 \\
+\end{entable}
 
+各環境中では |\caption[|\Meta{図表目次用}|]{|\Meta{説明文}|}| によりキャプション出力．
+\Meta{位置指定}は次の文字の組み合わせで指定：|t|=ページ上部，|b|=ページ下部，\linebreak
+|p|=独立ページ，|h|=その場，|!|=条件が悪くても指定位置に配置．
+
+\subsection{引用と注釈}
+
+\begin{entable}[\enspace\qquad]{2}{2}
+|\begin{quote}| & 短い引用 & |\begin{quotation}| & 複数段落の引用 \\
+\mergecol{2}{\texttt{\bs footnote[}\Meta{番号}\texttt{]\{}\Meta{脚注}\texttt{\}}}
+  & \mergecol{2}{\texttt{\bs marginpar\{}\Meta{傍注}\texttt{\}}} \\
+\end{entable}
+
+%|\footnote| が使えない場面もある．その場合 |\footnotemark[|\Meta{番号}|]| で
+%記号を付け，後から |\footnotetext[|\Meta{番号}|]{|\Meta{脚注}|}| でテキストを与える．
 
 \section{テキストプロパティ}
 
 \subsection{書体}
-\newcommand{\FontCmd}[3]{\PBS\verb!\#1{!\textit{text}\verb!}!  \> %
-                         \verb!{\#2 !\textit{text}\verb!}! \> %
-                         \#1{#3}}
-\begin{tabular}{@{}l@{}l@{}l@{}}
-\verb!\textrm{!\Meta{テキスト}\verb!}!                    & %
-        \verb!{\rmfamily !\Meta{テキスト}\verb!}!               & %
-        \textrm{Roman family} \\
-\verb!\textsf{!\Meta{テキスト}\verb!}!                    & %
-        \verb!{\sffamily !\Meta{テキスト}\verb!}!               & %
-        \textsf{Sans serif family} \\
-\verb!\texttt{!\Meta{テキスト}\verb!}!                    & %
-        \verb!{\ttfamily !\Meta{テキスト}\verb!}!               & %
-        \texttt{Typewriter family} \\
-\verb!\textmd{!\Meta{テキスト}\verb!}!                    & %
-        \verb!{\mdseries !\Meta{テキスト}\verb!}!               & %
-        \textmd{Medium series} \\
-\verb!\textbf{!\Meta{テキスト}\verb!}!                    & %
-        \verb!{\bfseries !\Meta{テキスト}\verb!}!               & %
-        \textbf{Bold series} \\
-\verb!\textup{!\Meta{テキスト}\verb!}!                    & %
-        \verb!{\upshape !\Meta{テキスト}\verb!}!               & %
-        \textup{Upright shape} \\
-\verb!\textit{!\Meta{テキスト}\verb!}!                    & %
-        \verb!{\itshape !\Meta{テキスト}\verb!}!               & %
-        \textit{Italic shape} \\
-\verb!\textsl{!\Meta{テキスト}\verb!}!                    & %
-        \verb!{\slshape !\Meta{テキスト}\verb!}!               & %
-        \textsl{Slanted shape} \\
-\verb!\textsc{!\Meta{テキスト}\verb!}!                    & %
-        \verb!{\scshape !\Meta{テキスト}\verb!}!               & %
-        \textsc{Small Caps shape} \\
-\verb!\textmc{!\Meta{テキスト}\verb!}!\psp                & %
-        \verb!{\mcfamily !\Meta{テキスト}\verb!}!\psp           & %
-        \textmc{明朝体} \\
-\verb!\textgt{!\Meta{テキスト}\verb!}!                    & %
-        \verb!{\gtfamily !\Meta{テキスト}\verb!}!               & %
-        \textgt{ゴシック体} \\
-\end{tabular}
 
-\verb!\textit!のようなコマンドを使った方 (t\textit{tt}t) が \verb!\itshape! のような宣言による
-書体変更を行う (t{\itshape tt}t) よりも空白がきれいに入る．\verb!\normalfont!,
-\verb!\textnormal{!\Meta{テキスト}\verb!}! を用いると，ファミリ・シリーズ・シェイプを同時に
-デフォルト設定へ戻すことができる．
+\begin{entable}[\enspace]{3}{1}
+|\textrm{|\Meta{テキスト}|}| & |{\rmfamily |\Meta{テキスト}|}| & \textrm{Roman family} \\
+|\textsf{|\Meta{テキスト}|}| & |{\sffamily |\Meta{テキスト}|}| & \textsf{Sans serif family} \\
+|\texttt{|\Meta{テキスト}|}| & |{\ttfamily |\Meta{テキスト}|}| & \texttt{Typewriter family} \\
+|\textmd{|\Meta{テキスト}|}| & |{\mdseries |\Meta{テキスト}|}| & \textmd{Medium series} \\
+|\textbf{|\Meta{テキスト}|}| & |{\bfseries |\Meta{テキスト}|}| & \textbf{Bold series} \\
+|\textup{|\Meta{テキスト}|}| & |{\upshape |\Meta{テキスト}|}| & \textup{Upright shape} \\
+|\textit{|\Meta{テキスト}|}| & |{\itshape |\Meta{テキスト}|}| & \textit{Italic shape} \\
+|\textsl{|\Meta{テキスト}|}| & |{\slshape |\Meta{テキスト}|}| & \textsl{Slanted shape} \\
+|\textsc{|\Meta{テキスト}|}| & |{\scshape |\Meta{テキスト}|}| & \textsc{Small Caps shape} \\
+|\textmc{|\Meta{テキスト}|}| & |{\mcfamily |\Meta{テキスト}|}| & \textmc{明朝体} \\
+|\textgt{|\Meta{テキスト}|}| & |{\gtfamily |\Meta{テキスト}|}| & \textgt{ゴシック体} \\
+\end{entable}
+
+|\textnormal{|\Meta{テキスト}|}|, |\normalfont| を用いるとファミリ・シリーズ・シェイプを
+同時にデフォルト設定へ戻すことができる．
 
 \subsection{装飾}
-\begin{tabular}{@{}l@{}l@{}l@{}}
-\verb!\emph{!\Meta{テキスト}\verb!}!                      & %
-        \verb!{\em !\Meta{テキスト}\verb!}!\psp           & %
-        \emph{強調}（効果は環境依存） \\
-\verb!\underline{!\Meta{テキスト}\verb!}!                 & %
-                                                        & %
-        \underline{下線}
-\end{tabular}
+
+\begin{entable}[\enspace]{3}{1}
+|\emph{|\Meta{テキスト}|}| & |{\em |\Meta{テキスト}|}| & \emph{強調}（効果は環境依存） \\
+|\underline{|\Meta{テキスト}|}| & & \underline{下線} \\
+\end{entable}
 
 \subsection{フォントサイズ}
-\setlength{\columnsep}{14pt} % Need to move columns apart a little
+
+\bgroup
+\setlength{\columnsep}{14pt}
 \begin{multicols}{2}
 \begin{tabbing}
-\verb!\footnotesize!          \= \kill
-\verb!\tiny!                  \>  \tiny{極小} \\
-\verb!\scriptsize!            \>  \scriptsize{スクリプトサイズ} \\
-\verb!\footnotesize!          \>  \footnotesize{脚注サイズ} \\
-\verb!\small!                 \>  \small{小さい} \\
-\verb!\normalsize!            \>  \normalsize{標準} \\
-\verb!\large!                 \>  \large{大きい} \\
-\verb!\Large!                 \=  \Large{超大きい} \\  % Tab hack for new column
-\verb!\LARGE!                 \>  \LARGE{超々大きい} \\
-\verb!\huge!                  \>  \huge{巨大} \\
-\verb!\Huge!                  \>  \Huge{超巨大}
+|\footnotesize| \= \kill
+|\tiny| \> \tiny{極小}\\
+|\scriptsize| \> \scriptsize{スクリプトサイズ}\\
+|\footnotesize| \> \footnotesize{脚注サイズ}\\
+|\small| \> \small{小さい}\\
+|\normalsize| \> \normalsize{標準}\\
+|\large| \> \large{大きい}\\
+|\Large| \= \Large{超大きい}\\
+|\LARGE| \> \LARGE{超々大きい}\\
+|\huge| \> \huge{巨大}\\
+|\Huge| \> \Huge{超巨大}
 \end{tabbing}
 \end{multicols}
-\setlength{\columnsep}{1pt} % Set column separation back
+\egroup
 
 これらの宣言は \verb!{\small! \ldots\verb!}! のような形で利用するか，ブレースなし
 で以降の文書全体のフォントサイズを変更する．
 
 \subsection{入力通りに出力}
-\settowidth{\MyLen}{\texttt{.begin.verbatim..} }
-\begin{tabular}{@{}p{\the\MyLen}%
-                @{}p{\linewidth-\the\MyLen}@{}}
-\verb@\begin{verbatim}@  & verbatim環境（入力通りに出力される）． \\
-\verb@\begin{verbatim*}@ & スペースを `\verb*@ @' で明示するverbatim環境. \\
-\verb@\verb!@\Meta{テキスト}\verb@!@
-                         & デリミタ（ここでは `\texttt{!}'）間の内容をそのまま出力．
-\end{tabular}
+
+\begin{entable}[\enspace]{2}{1}
+|\verb!|\Meta{テキスト}|!| & デリミタ（ここでは `\texttt{!}'）間の内容をそのまま出力 \\
+|\begin{verbatim}| & 入力通りに出力される環境 \\
+\end{entable}
+
+|\verb*| や |\begin{verbatim*}| を用いると空白が `\verb*! !' で明示される．
 
 \subsection{配置}
 \begin{tabular}{@{}lll@{}}
@@ -316,11 +274,6 @@
 \verb!\begin{flushleft}!  & \verb!\raggedright! & 左寄せ \\
 \verb!\begin{flushright}! & \verb!\raggedleft!  & 右寄せ \\
 \end{tabular}
-
-%\subsection{Miscellaneous}
-%\verb!\linespread{!$x$\verb!}! changes the line spacing by the
-%multiplier $x$.
-
 
 \section{記号など}
 
@@ -569,7 +522,16 @@ $\Psi$          &  \verb!\Psi!  &
 $\Omega$        &  \verb!\Omega!  
 \end{tabular}
 
-\section{目次と参考文献}
+\section{相互参照・目次・索引}
+\subsection{相互参照と脚注}
+\settowidth{\MyLen}{\texttt{.footnote.テキスト..} }
+\begin{tabular}{@{}p{\the\MyLen}%
+                @{}p{\linewidth-\the\MyLen}@{}}
+\verb!\label{!\Meta{マーカ}\verb!}!      &  相互参照用のマーカをセット． \\
+\verb!\ref{!\Meta{マーカ}\verb!}!        &  マーカの位置（節番号など）を出力． \\
+\verb!\pageref{!\Meta{マーカ}\verb!}!    &  マーカのページ番号を出力． \\
+\end{tabular}
+
 \subsection{目次}
 \settowidth{\MyLen}{\texttt{.tableofcontents} }
 \begin{tabular}{@{}p{\the\MyLen}%
@@ -580,87 +542,6 @@ $\Omega$        &  \verb!\Omega!
 \end{tabular}
 
 目次を表示させるためには\texttt{platex}を複数回実行する必要がある．
-
-\subsection{\BibTeX エントリータイプ}
-\settowidth{\MyLen}{\texttt{.mastersthesis} }
-\begin{tabular}{@{}p{\the\MyLen}@{}p{\linewidth-\the\MyLen}@{}}
-\verb!@article!         &  論文や雑誌の記事． \\
-\verb!@book!            &  発行主体が明確な書籍． \\
-\verb!@booklet!         &  発行主体が不明確な書籍． \\
-\verb!@conference!      &  会議の議事録． \\
-\verb!@inbook!          &  書籍の一部． \\
-\verb!@incollection!    &  書籍に収録されている文書． \\
-\verb!@manual!          &  マニュアル文書． \\
-%\verb!@mastersthesis!   &  Master's thesis. \\
-\verb!@misc!            &  その他． \\
-\verb!@phdthesis!       &  博士論文． \\
-\verb!@techreport!      &  技術報告書． \\
-\verb!@unpublished!     &  未出版の文献． \\
-\end{tabular}
-
-\BibTeX を利用する場合\texttt{platex}, \texttt{jbibtex}を順番に実行し，さらに\texttt{platex}
-を複数回実行する必要がある．
-
-\subsection{\BibTeX フィールド}
-\settowidth{\MyLen}{\texttt{organization.}}
-\begin{tabular}{@{}p{\the\MyLen}@{}p{\linewidth-\the\MyLen}@{}}
-\verb!address!          &  出版社の所在地 \\
-\verb!author!           &  著者名．姓と名の間にスペースを入れる． \\
-\verb!booktitle!        &  文献を含んでいる書籍等のタイトル． \\
-\verb!chapter!          &  参照した章などの番号． \\
-\verb!edition!          &  文献の版． \\
-\verb!editor!           &  編集者名．書式は\verb!author!と同じ． \\
-\verb!institution!      &  技術報告書の母体組織． \\
-\verb!journal!          &  雑誌名． \\
-\verb!key!              &  \verb!author!がない場合，ソートに用いる． \\
-\verb!month!            &  出版月（未出版の場合は作成月）． \\
-\verb!note!             &  任意の補足説明． \\
-\verb!number!           &  学術雑誌などの号数． \\
-\verb!organization!     &  会議の主催機関やマニュアルの発行機関． \\
-\verb!pages!            &  参照したページの範囲． \\
-\verb!publisher!        &  出版社名． \\
-\verb!school!           &  学校名． \\
-\verb!series!           &  文献のシリーズ名． \\
-\verb!title!            &  文献のタイトル． \\
-\verb!type!             &  文献の分類名． \\
-\verb!volume!           &  書籍や雑誌の巻数． \\
-\verb!year!             &  出版年（未出版の場合は作成年）． \\
-\end{tabular}
-これらのフィールドはすべて記入されていなくてもよい．
-
-\subsection{一般的な\BibTeX スタイルファイル}
-\settowidth{\MyLen}{\texttt{jabbrv} }
-\begin{tabular}{@{}p{\the\MyLen}@{}p{\linewidth-\the\MyLen}@{}}
-\verb!jplain!  &  標準のスタイル． \\
-\verb!jabbrv!  &  著者名を省略形にする． \\
-\verb!jalpha!  &  文献番号を「筆頭著者の省略形＋発行年の省略形」の形にする． \\
-\verb!junsrt!  &  文献を並び替えずに，言及順に掲載する． \\
-\end{tabular}
-
-\BibTeX を利用する場合，\LaTeX 文書には次の2行が \verb!\end{document}! の直前に記入されて
-いる必要がある．
-%
-\begin{flushleft}
-\verb!\bibliographystyle{!\Meta{\BibTeX スタイルファイル}\verb!}! \\
-\verb!\bibliography{!\Meta{文献データベースファイル}\verb!}!
-\end{flushleft}
-
-\subsection{文献データベースのサンプル}
-文献データベースは拡張子が ``\texttt{.bib}'' のファイルに記述し，これを
-\texttt{bibtex}コマンドによって処理する．
-%
-\begin{verbatim}
-@String{N = {Na\-ture}}
-@Article{WC:1953,
-  author  = {James Watson and Francis Crick},
-  title   = {A structure for Deoxyribose Nucleic Acid},
-  journal = N,
-  volume  = {171},
-  pages   = {737},
-  year    = 1953
-}
-\end{verbatim}
-
 
 \section{\LaTeX 文書のサンプル}
 \lstinputlisting{platexsample.tex}
