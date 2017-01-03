@@ -42,7 +42,8 @@
 \def\set@etsep#1#2{\def\etcolsep{#1}\def\etitemsep{#2}}
 \newenvironment{entable}[3][\quad\qquad]{\set@etsep#1\relax\relax
   \begin{tabular}{%
-    @{}*{\the\numexpr#3-1}{*{#2}{l@{\etcolsep}}@{\etitemsep}}*{#2}{l@{\etcolsep}}@{}}}{%
+    @{}*{\the\numexpr#3-1}{*{\the\numexpr#2-1}{l@{\etcolsep}}l@{\etitemsep}}%
+    *{\the\numexpr#2-1}{l@{\etcolsep}}l@{}}}{%
   \end{tabular}}
 \newcommand{\mergecol}[2]{\multicolumn{#1}{@{}l@{}}{#2}}
 \makeatother
@@ -77,9 +78,9 @@
 \section{p\LaTeXe の基本}
 
 \begin{entable}{2}{1}
-制御綴 & \LaTeX の命令．必須引数は |{}| 省略可能な引数は |[]| で囲う \\
+制御綴 & `\texttt{\bs}' で始まる命令．引数は |{}|，省略可能な引数は |[]| で囲う \\
 環境 & |\begin{|\Meta{環境名}|}| と |\end{|\Meta{環境名}|}| に挟まれた部分 \\
-コメント & 記号 `|%|' を書くと，以降行末までコメントとして無視される
+コメント & `|%|' 以降は行末までコメントとして扱われる（無視される） \\
 \end{entable}
 
 すべてではないが，多くの命令や環境は入れ子にできる．
@@ -99,7 +100,7 @@
 \section{プリアンブル}
 
 文書はクラス宣言で開始：
-|\documentclass[|\Meta{オプション}|]{|\Meta{クラス}|}|．\linebreak
+|\documentclass[|\Meta{オプション}|]{|\Meta{クラス}|}|．\break
 本文はdocument環境に記述．|\documentclass| と |\begin{document}| の間は
 \emph{プリアンブル}と呼ばれ，文書全体に適用する設定などを記述する．
 
@@ -147,17 +148,17 @@
 \end{entable}
 
 |\pagestyle{|\Meta{スタイル}|}| の形式で指定．この命令は本文中でも利用可能．
-|\thispagestyle{|\Meta{スタイル}|}| により一時的な変更もできる．|myheadings| 指定時は
-|\markboth{|\Meta{偶数ページ用}|}{|\Meta{奇数ページ用}|}| で柱を設定．
+|\thispagestyle{|\Meta{スタイル}|}| により一時的な変更もできる．|myheadings| 指定時
+は |\markboth{|\Meta{偶数ページ用}|}{|\Meta{奇数ページ用}|}| で柱を設定．
 
-\subsection{その他}
+\subsection{各種設定など}
 
 \begin{entable}{2}{1}
 |\usepackage[|\Meta{オプション}|]{|\Meta{パッケージ}|}| & パッケージ読み込み \\
 |\setcounter{|\Meta{カウンタ}|}{|\Meta{数値}|}| & カウンタの値を設定 \\
 |\setlength{|\Meta{寸法を表す制御綴}|}{|\Meta{長さ}|}| & 寸法を設定 \\
 |\newcommand{|\Meta{制御綴}|}[|\Meta{引数の数}|]{|\Meta{定義}|}| & マクロの定義 \\
-|\newenvironment{|\Meta{環境名}|}{|\Meta{開始}|}{|\Meta{終了}|}| & 環境の定義 \\
+%|\newenvironment{|\Meta{環境名}|}{|\Meta{開始}|}{|\Meta{終了}|}| & 環境の定義 \\
 \end{entable}
 
 |\usepackage| はプリアンブルのみで利用可．他の命令は中級者以上向け．
@@ -182,18 +183,19 @@
 |\begin{description}| & 見出し付き \\
 \end{entable}
 
-各項目は上記の環境中で |\item |\Meta{テキスト} で表現．|\item[|\Meta{ラベル}|]|\linebreak
+各項目は上記の環境中で |\item |\Meta{テキスト} で表現．|\item[|\Meta{ラベル}|]|\break
 のようにすると当該項目のラベルのみを変更（description環境では必須）．
 
 \subsection{フロート}
 
-\begin{entable}[\enspace\enspace]{2}{2}
-|\begin{figure}[|\Meta{位置指定}|]| & 図 & |\begin{table}[|\Meta{位置指定}|]| & 表 \\
+\begin{entable}{2}{2}
+|\begin{figure}[|\Meta{位置}|]| & 図 & |\begin{table}[|\Meta{位置}|]| & 表 \\
 \end{entable}
 
-各環境中では |\caption[|\Meta{図表目次用}|]{|\Meta{説明文}|}| によりキャプション出力．
-\Meta{位置指定}は次の文字の組み合わせで指定：|t|=ページ上部，|b|=ページ下部，\linebreak
-|p|=独立ページ，|h|=その場，|!|=条件が悪くても指定位置に配置．
+各環境中 |\caption[|\Meta{図表目次用}|]{|\Meta{説明文}|}| でキャプションを付けられる．
+\Meta{位置}は次の文字の組み合わせで指定：$\mathtt{t}=\mbox{ページ上部}$，
+$\mathtt{b}=\mbox{ページ下部}$，$\mathtt{p}=\mbox{独立ページ}$，$\mathtt{h}=\mbox{その場}$，
+$\mathtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 
 \subsection{引用と注釈}
 
@@ -211,6 +213,8 @@
 \subsection{書体}
 
 \begin{entable}[\enspace]{3}{1}
+|\textmc{|\Meta{テキスト}|}| & |{\mcfamily |\Meta{テキスト}|}| & \textmc{明朝体} \\
+|\textgt{|\Meta{テキスト}|}| & |{\gtfamily |\Meta{テキスト}|}| & \textgt{ゴシック体} \\
 |\textrm{|\Meta{テキスト}|}| & |{\rmfamily |\Meta{テキスト}|}| & \textrm{Roman family} \\
 |\textsf{|\Meta{テキスト}|}| & |{\sffamily |\Meta{テキスト}|}| & \textsf{Sans serif family} \\
 |\texttt{|\Meta{テキスト}|}| & |{\ttfamily |\Meta{テキスト}|}| & \texttt{Typewriter family} \\
@@ -220,8 +224,6 @@
 |\textit{|\Meta{テキスト}|}| & |{\itshape |\Meta{テキスト}|}| & \textit{Italic shape} \\
 |\textsl{|\Meta{テキスト}|}| & |{\slshape |\Meta{テキスト}|}| & \textsl{Slanted shape} \\
 |\textsc{|\Meta{テキスト}|}| & |{\scshape |\Meta{テキスト}|}| & \textsc{Small Caps shape} \\
-|\textmc{|\Meta{テキスト}|}| & |{\mcfamily |\Meta{テキスト}|}| & \textmc{明朝体} \\
-|\textgt{|\Meta{テキスト}|}| & |{\gtfamily |\Meta{テキスト}|}| & \textgt{ゴシック体} \\
 \end{entable}
 
 |\textnormal{|\Meta{テキスト}|}|, |\normalfont| を用いるとファミリ・シリーズ・シェイプを
@@ -268,123 +270,86 @@
 |\verb*| や |\begin{verbatim*}| を用いると空白が `\verb*! !' で明示される．
 
 \subsection{配置}
-\begin{tabular}{@{}lll@{}}
-\textbf{環境}  &  \textbf{宣言}  &  \textbf{説明}  \\
-\verb!\begin{center}!     & \verb!\centering!   & 中央寄せ \\
-\verb!\begin{flushleft}!  & \verb!\raggedright! & 左寄せ \\
-\verb!\begin{flushright}! & \verb!\raggedleft!  & 右寄せ \\
-\end{tabular}
 
-\section{記号など}
+\begin{entable}{3}{1}
+|\begin{center}| & |\centering| & 中央寄せ \\
+|\begin{flushleft}| & |\raggedright| & 左寄せ \\
+|\begin{flushright}| & |\raggedleft| & 右寄せ \\
+\end{entable}
 
-\subsection{一般的な記号}
-\begin{tabular}{@{}l@{\hspace{1em}}l@{\hspace{2em}}l@{\hspace{1em}}l@{\hspace{2em}}l@{\hspace{1em}}l@{\hspace{2em}}l@{\hspace{1em}}l@{}}
-\&              &  \verb!\&! &
-\_              &  \verb!\_! &
-\ldots          &  \verb!\ldots! &
-\textbullet     &  \verb!\textbullet! \\
-\$              &  \verb!\$! &
-\^{}            &  \verb!\^{}! &
-\textbar        &  \verb!\textbar! &
-\textbackslash  &  \verb!\textbackslash! \\
-\%              &  \verb!\%! &
-\~{}            &  \verb!\~{}! &
-\#              &  \verb!\#! &
-\S              &  \verb!\S! \\
-\end{tabular}
+\section{空白・行・ページ}
 
-\subsection{アクセント記号}
-\begin{tabular}{@{}l@{\ }ll@{\ }ll@{\ }ll@{\ }ll@{\ }l@{}}
-\`o   & \verb!\`o! &
-\'o   & \verb!\'o! &
-\^o   & \verb!\^o! &
-\~o   & \verb!\~o! &
-\=o   & \verb!\=o! \\
-\.o   & \verb!\.o! &
-\"o   & \verb!\"o! &
-\u o  & \verb!\u o! &
-\v o  & \verb!\v o! &
-\H o  & \verb!\H o! \\
-\c c  & \verb!\c c! &
-\d o  & \verb!\d o! &
-\b o  & \verb!\b o! &
-\t oo & \verb!\t oo! &
-\oe   & \verb!\oe! \\
-\OE   & \verb!\OE! &
-\ae   & \verb!\ae! &
-\AE   & \verb!\AE! &
-\aa   & \verb!\aa! &
-\AA   & \verb!\AA! \\
-\o    & \verb!\o! &
-\O    & \verb!\O! &
-\l    & \verb!\l! &
-\L    & \verb!\L! &
-\i    & \verb!\i! \\
-\j    & \verb!\j! &
-\ss   & \verb!\ss! &
-!`    & \verb+!`+ &
-?`    & \verb!?`! &
-\end{tabular}
+\subsection{水平スペース（文字送り方向）}
 
-\subsection{デリミタ}
-\begin{tabular}{@{}l@{\ }ll@{\ }ll@{\ }ll@{\ }ll@{\ }ll@{\ }l@{}}
-`       & \verb!`!  &
-``      & \verb!``! &
-\{      & \verb!\{! &
-\lbrack & \verb![! &
-(       & \verb!(! &
-\textless  &  \verb!\textless! \\
-'       & \verb!'!  &
-''      & \verb!''! &
-\}      & \verb!\}! &
-\rbrack & \verb!]! &
-)       & \verb!)! &
-\textgreater  &  \verb!\textgreater! \\
-\end{tabular}
+\begin{entable}[\enspace\quad]{2}{4}
+\verb*!\ ! & 空白 & |\enspace| & \SI{0.5}{em} & |\quad| & \SI{1}{em} & |\,| & 小さな空白 \\
+|~| & 改行禁止 & \mergecol{2}{\texttt{\bs hspace\{}\Meta{長さ}\texttt{\}}}
+  & |\qquad| & \SI{2}{em} & |\!| & 負の空白 \\
+\end{entable}
 
-\subsection{ダッシュ類}
-\begin{tabular}{@{}llll@{}}
-\textbf{名前} & \textbf{コード} & \textbf{使用例} & \textbf{用途} \\
-ハイフン & \verb!-!   & X-ray          & 単語内，2単語の連結． \\
-en-dash  & \verb!--!  & 1--5           & 範囲を表す場合など． \\
-em-dash  & \verb!---! & Yes---or no?   & 挿入句の導入など．
-\end{tabular}
+|\hfil|, |\hfill| は無限に伸びる空白で後者がより強力．英大文字で終わる文のピリオド直前に
+置く |\@| やイタリック補正の |\/| もスペーシングに影響．
+
+\subsection{垂直スペース（行送り方向）}
+
+\begin{entable}[\enspace]{6}{1}
+|\smallskip| & |\medskip| & |\bigskip| & |\vspace{|\Meta{長さ}|}| & |\vfil| & |\vfill| \\
+\end{entable}
+
+|\phantom{|\Meta{テキスト}|}| を用いると\Meta{テキスト}と同じ寸法の空白を作る．
 
 \subsection{行とページ}
-\settowidth{\MyLen}{\texttt{.clearpage} }
-\begin{tabular}{@{}p{\the\MyLen}%
-                @{}p{\linewidth-\the\MyLen}@{}}
-\verb!\par!       & 改段落．単に空白行を挟んでも同じ． \\
-\verb!\\!         & 強制改行（段落は維持）． \\
-\verb!\\*!        & 改ページを伴わない強制改行． \\
-\verb!\newpage!   & 強制改ページ（二段組左段の場合は右段に移る）． \\
-\verb!\clearpage! & まだ出力していない図表をすべて出力して改ページ． \\
-\verb!\noindent!  & 現在行をインデントしない．
-\end{tabular}
 
-\subsection{空白}
-\settowidth{\MyLen}{\texttt{.hspace.長さ..} }
-\begin{tabular}{@{}p{\the\MyLen}%
-                @{}p{\linewidth-\the\MyLen}@{}}
-\verb!~!        & 改行不可スペース（ex. \verb!W.J.~Clinton!）． \\
-\verb!\quad!    & 1 emのスペースを入れる． \\
-\verb!\qquad!   & 2 emのスペースを入れる． \\
-\verb!\hspace{!\Meta{長さ}\verb!}!
-               & 水平スペース． \\
-\verb!\vspace{!\Meta{長さ}\verb!}!
-               & 垂直スペース． \\
-\end{tabular}
+\begin{entable}[\enspace\enspace]{2}{2}
+|\par| & 改段落（空行と同じ） & |\noindent| & インデントしない \\
+|\\*| & 改行（改ページなし） & |\\[|\Meta{長さ}|]| & 改行（縦スペース付加） \\
+|\newpage| & 改ページ（段移動） & |\clearpage| & 改ページ（全図表出力） \\
+\end{entable}
+
+|\break| は段落内では改行（|\\| とは挙動が異なる），段落間では改ページ．
+
+\section{記号・その他}
+
+\subsection{一般的な記号}
+
+\begin{entable}[\enspace\qquad]{2}{4}
+\& & |\&| & \_ & |\_| & \dag & |\dag| & \textbackslash & |\textbackslash| \\
+\$ & |\$| & \P & |\P| & \ddag & |\ddag| & \textbullet & |\textbullet| \\
+\% & |\%| & \S & |\S| & \pounds & |\pounds| & \texttrademark & |\texttrademark| \\
+\# & |\#| & \dots & |\dots| & \copyright & |\copyright| & \textregistered & |\textregistered| \\
+\end{entable}
+
+\subsection{アクセント類}
+
+\begin{entable}[\enspace\qquad]{2}{6}
+!` & |!`| & ?` & |?`| & \.a & |\.a| & \'a & |\'a| & \"a & |\"a| & \`a & |\`a| \\
+\^a & |\^a| & \=a & |\=a| & \~a & |\~a| & \aa & |\aa| & \AA & |\AA| & \ae & |\ae| \\
+\AE & |\AE| & \b a & |\b a| & \c c & |\c c| & \d a & |\d a| & \H a & |\H a| & \i & |\i| \\
+\j & |\j| & \l & |\l| & \L & |\L| & \o & |\o| & \O & |\O| & \oe & |\oe| \\
+\OE & |\OE| & \r a & |\r a| & \ss & |\ss| & \t oo & |\t oo| & \u a & |\u a| & \v a & |\v a| \\
+\end{entable}
+
+\subsection{括弧類}
+
+\begin{entable}{2}{6}
+` & |`| & `` & |``| & \{ & |\{| & \lbrack & |[| & ( & |(| & \textless & |\textless| \\
+' & |'| & '' & |''| & \} & |\}| & \rbrack & |]| & ) & |)| & \textgreater & |\textgreater| \\
+\end{entable}
+
+\subsection{ダッシュ類}
+
+\begin{entable}[\qquad]{4}{1}
+ハイフン & |-| & X-ray & 単語内，2単語の連結 \\
+en-dash & |--| & 1--5 & 範囲を表す場合など \\
+em-dash & |---| & Yes---or no? & 挿入句の導入など \\
+\end{entable}
 
 \subsection{その他}
-\settowidth{\MyLen}{\texttt{.rule.幅..高さ...} }
-\begin{tabular}{@{}p{\the\MyLen}%
-                @{}p{\linewidth-\the\MyLen}@{}}
-\verb!\today!  &  今の日付を出力．\verb!\西暦!, \verb!\和暦!で形式を変更可能． \\
-\verb!\@!      &  英大文字で終わる文のピリオド直前に記入． \\
-\verb!\rule{!\Meta{幅}\verb!}{!\Meta{高さ}\verb!}!
-               & 指定した寸法の線． \\
-\end{tabular}
 
+\begin{entable}{2}{1}
+|\today| & 現在の日付．|\西暦|, |\和暦|で形式を変更可能 \\
+|\TeX|/|\LaTeX|/|\LaTeXe| & ロゴ\TeX/\LaTeX/\LaTeXe \\
+\end{entable}
 
 \section{表組み}
 
@@ -523,7 +488,7 @@ $\Omega$        &  \verb!\Omega!
 \end{tabular}
 
 \section{相互参照・目次・索引}
-\subsection{相互参照と脚注}
+\subsection{相互参照}
 \settowidth{\MyLen}{\texttt{.footnote.テキスト..} }
 \begin{tabular}{@{}p{\the\MyLen}%
                 @{}p{\linewidth-\the\MyLen}@{}}
