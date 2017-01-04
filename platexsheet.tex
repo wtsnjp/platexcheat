@@ -3,12 +3,11 @@
 
 % 使用パッケージ
 \usepackage[small]{titlesec}
+\usepackage[final]{plistings}
 \usepackage{geometry}
 \usepackage{multicol}
 \usepackage{shortvrb}
-\usepackage{plistings}
 \usepackage{siunitx}
-\usepackage{calc}     % いずれ除去
 \usepackage{otf}
 \usepackage{url}
 
@@ -53,9 +52,6 @@
 \chardef\vbar=`\| \chardef\bs=`\\
 \newcommand{\mboxtt}[1]{\mbox{\texttt{#1}}}
 \newcommand{\Meta}[1]{$\langle$\mbox{}\emph{#1}\mbox{}$\rangle$}
-\newcommand{\psp}{\phantom{ }}                                       % いずれ除去
-\newlength{\MyLen}                                                   % いずれ除去
-\newcommand{\BibTeX}{\textnormal{\textsc{Bib}\TeX}}
 
 % -----------------------------------------------------------------------
 
@@ -190,8 +186,8 @@
 
 \subsection{フロート}
 
-\begin{entable}{2}{2}
-|\begin{figure}[|\Meta{位置}|]| & 図 & |\begin{table}[|\Meta{位置}|]| & 表 \\
+\begin{entable}[\enspace\quad]{2}{2}
+|\begin{figure}[|\Meta{位置}|]| & 図を配置 & |\begin{table}[|\Meta{位置}|]| & 表を配置 \\
 \end{entable}
 
 各環境中 |\caption[|\Meta{図表目次用}|]{|\Meta{説明文}|}| でキャプションを付けられる．
@@ -259,8 +255,8 @@ $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 \end{multicols}
 \egroup
 
-これらの宣言は \verb!{\small! \ldots\verb!}! のような形で利用するか，ブレースなし
-で以降の文書全体のフォントサイズを変更する．
+|\fontsize{|\Meta{サイズ}|}{|\Meta{行送り}|}\selectfont| で寸法による指定も可能．
+これらの命令は通常 |{|\Meta{制御綴}| |\Meta{テキスト}|}| の形で使用．
 
 \subsection{入力通りに出力}
 
@@ -349,8 +345,9 @@ em-dash & |---| & Yes---or no? & 挿入句の導入など \\
 \subsection{その他}
 
 \begin{entable}{2}{1}
-|\today| & 現在の日付．|\西暦|, |\和暦|で形式を変更可能 \\
-|\TeX|/|\LaTeX|/|\LaTeXe| & \TeX/\LaTeX/\LaTeXe \\
+|\today| & 現在の日付（|\西暦|, |\和暦| で形式を変更可能） \\
+|\TeX|/|\LaTeX|/|\LaTeXe| & \TeX/\LaTeX/\LaTeXe（ロゴ） \\
+|Y\llap{=}|/|\rlap{'},| & Y\llap{=}/\rlap{'},（重ね書き） \\
 \end{entable}
 
 \section{表組み}
@@ -365,8 +362,8 @@ em-dash & |---| & Yes---or no? & 挿入句の導入など \\
 $\mboxtt{c}=\mbox{中央寄せの列}$，$\mboxtt{r}=\mbox{右寄せの列}$，
 $\mboxtt{p\{\Meta{幅}\}}=\mbox{寸法指定の列}$，
 $\mboxtt{@\{\Meta{区切り}\}}=\mbox{列間の区切り}$，
-$\mbox{\texttt{\vbar}}=\mbox{表全体の縦罫線}$．
-具体的な使用例は本シート末尾の文書サンプル参照．
+$\mboxtt{*\{\Meta{回数}\}\{\Meta{データ}\}}=\mbox{繰り返し}$，
+$\mboxtt{\vbar}=\mbox{表全体の縦罫線}$．
 
 %\subsubsection{要素}
 
@@ -386,123 +383,52 @@ $\mbox{\texttt{\vbar}}=\mbox{表全体の縦罫線}$．
 \end{entable}
 
 \section{数式モード}
-数式モードを使うには，該当箇所を `\verb!$!' で囲うかequation環境を用いる．
 
-\begin{tabular}{@{}l@{\hspace{1em}}l@{\hspace{2em}}l@{\hspace{1em}}l@{}}
-上付き$^{x}$            &
-\verb!^{x}!             &  
-下付き$_{x}$            &
-\verb!_{x}!             \\  
-$\frac{x}{y}$           &
-\verb!\frac{x}{y}!      &  
-$\sum_{k=1}^n$          &
-\verb!\sum_{k=1}^n!     \\  
-$\sqrt[n]{x}$           &
-\verb!\sqrt[n]{x}!      &  
-$\prod_{k=1}^n$         &
-\verb!\prod_{k=1}^n!    \\ 
-\end{tabular}
 
-\subsection{記号類}
 
-% The ordering of these symbols is slightly odd.  This is because I had to put all the
-% long pieces of text in the same column (the right) for it all to fit properly.
-% Otherwise, it wouldn't be possible to fit four columns of symbols here.
+\section{相互参照・目次・索引・文献リスト}
 
-\begin{tabular}{@{}l@{\hspace{1ex}}l@{\hspace{1em}}l@{\hspace{1ex}}l@{\hspace{1em}}l@{\hspace{1ex}} l@{\hspace{1em}}l@{\hspace{1ex}}l@{}}
-$\leq$          &  \verb!\leq!  &
-$\geq$          &  \verb!\geq!  &
-$\neq$          &  \verb!\neq!  &
-$\approx$       &  \verb!\approx!  \\
-$\times$        &  \verb!\times!  &
-$\div$          &  \verb!\div!  &
-$\pm$           & \verb!\pm!  &
-$\cdot$         &  \verb!\cdot!  \\
-$^{\circ}$      & \verb!^{\circ}! &
-$\circ$         &  \verb!\circ!  &
-$\prime$        & \verb!\prime!  &
-$\cdots$        &  \verb!\cdots!  \\
-$\infty$        & \verb!\infty!  &
-$\neg$          & \verb!\neg!  &
-$\wedge$        & \verb!\wedge!  &
-$\vee$          & \verb!\vee!  \\
-$\supset$       & \verb!\supset!  &
-$\forall$       & \verb!\forall!  &
-$\in$           & \verb!\in!  &
-$\rightarrow$   &  \verb!\rightarrow! \\
-$\subset$       & \verb!\subset!  &
-$\exists$       & \verb!\exists!  &
-$\notin$        & \verb!\notin!  &
-$\Rightarrow$   &  \verb!\Rightarrow! \\
-$\cup$          & \verb!\cup!  &
-$\cap$          & \verb!\cap!  &
-$\mid$          & \verb!\mid!  &
-$\Leftrightarrow$   &  \verb!\Leftrightarrow! \\
-$\dot a$        & \verb!\dot a!  &
-$\hat a$        & \verb!\hat a!  &
-$\bar a$        & \verb!\bar a!  &
-$\tilde a$      & \verb!\tilde a!  \\
+これらの機能を利用するには一般に |platex| を複数回実行する必要がある．
 
-$\alpha$        &  \verb!\alpha!  &
-$\beta$         &  \verb!\beta!  &
-$\gamma$        &  \verb!\gamma!  &
-$\delta$        &  \verb!\delta!  \\
-$\epsilon$      &  \verb!\epsilon!  &
-$\zeta$         &  \verb!\zeta!  &
-$\eta$          &  \verb!\eta!  &
-$\varepsilon$   &  \verb!\varepsilon!  \\
-$\theta$        &  \verb!\theta!  &
-$\iota$         &  \verb!\iota!  &
-$\kappa$        &  \verb!\kappa!  &
-$\vartheta$     &  \verb!\vartheta!  \\
-$\lambda$       &  \verb!\lambda!  &
-$\mu$           &  \verb!\mu!  &
-$\nu$           &  \verb!\nu!  &
-$\xi$           &  \verb!\xi!  \\
-$\pi$           &  \verb!\pi!  &
-$\rho$          &  \verb!\rho!  &
-$\sigma$        &  \verb!\sigma!  &
-$\tau$          &  \verb!\tau!  \\
-$\upsilon$      &  \verb!\upsilon!  &
-$\phi$          &  \verb!\phi!  &
-$\chi$          &  \verb!\chi!  &
-$\psi$          &  \verb!\psi!  \\
-$\omega$        &  \verb!\omega!  &
-$\Gamma$        &  \verb!\Gamma!  &
-$\Delta$        &  \verb!\Delta!  &
-$\Theta$        &  \verb!\Theta!  \\
-$\Lambda$       &  \verb!\Lambda!  &
-$\Xi$           &  \verb!\Xi!  &
-$\Pi$           &  \verb!\Pi!  &
-$\Sigma$        &  \verb!\Sigma!  \\
-$\Upsilon$      &  \verb!\Upsilon!  &
-$\Phi$          &  \verb!\Phi!  &
-$\Psi$          &  \verb!\Psi!  &
-$\Omega$        &  \verb!\Omega!  
-\end{tabular}
-
-\section{相互参照・目次・索引}
 \subsection{相互参照}
-\settowidth{\MyLen}{\texttt{.footnote.テキスト..} }
-\begin{tabular}{@{}p{\the\MyLen}%
-                @{}p{\linewidth-\the\MyLen}@{}}
-\verb!\label{!\Meta{マーカ}\verb!}!      &  相互参照用のマーカをセット． \\
-\verb!\ref{!\Meta{マーカ}\verb!}!        &  マーカの位置（節番号など）を出力． \\
-\verb!\pageref{!\Meta{マーカ}\verb!}!    &  マーカのページ番号を出力． \\
-\end{tabular}
+
+\begin{entable}{2}{1}
+|\label{|\Meta{ラベル}|}| & 相互参照用のラベルをセット \\
+|\ref{|\Meta{ラベル}|}| & ラベルの位置（章や図表，式番号など）を出力 \\
+|\pageref{|\Meta{ラベル}|}| & ラベルのページ番号を出力 \\
+\end{entable}
 
 \subsection{目次}
-\settowidth{\MyLen}{\texttt{.tableofcontents} }
-\begin{tabular}{@{}p{\the\MyLen}%
-                @{}p{\linewidth-\the\MyLen}@{}}
-\verb!\tableofcontents!  & 目次を印刷． \\
-\verb!\tableoffigures!   & 図目次を印刷． \\
-\verb!\tableoftables!    & 表目次を印刷． \\
-\end{tabular}
 
-目次を表示させるためには\texttt{platex}を複数回実行する必要がある．
+\begin{entable}[\enspace\qquad]{3}{2}
+|toc| & |\tableofcontents|
+  & \mergecol{4}{目次（|tocdepth| カウンタで掲載項目を調整可）} \\
+|lof| & |\tableoffigures| & 図目次 & |lot| & |\tableoftables| & 表目次 \\
+\end{entable}
+
+掲載項目は自動的に収集されるが，手動で追加することも可能：\\
+|\addcontentsline{|\Meta{目次の種類}|}{|\Meta{項目の種類}|}{|\Meta{項目}|}|
+
+\subsection{索引}
+
+\begin{entable}{2}{2}
+|\index{|\Meta{読み}|@|\Meta{項目}|}| & 索引項目を指定 & |\printindex| & 索引を出力 \\
+\end{entable}
+
+|platex| 実行後indファイルを |mendex| で処理して，さらに |platex| を実行．
+
+\subsection{文献リスト}
+
+\begin{entable}{2}{1}
+|\cite[|\Meta{コメント}|]{|\Meta{キー}|,|\Meta{キー}|,|\dots|}| & 対応する文献を引用 \\
+|\begin{thebibliography}{|\Meta{最大ラベル}|}| & 文献リスト用の箇条書き \\
+|\bibitem[|\Meta{ラベル}|]{|\Meta{キー}|} |\Meta{テキスト} & 文献項目の記述 \\
+\end{entable}
+
+|jbibtex| を用いて文献リストをデータベースから自動生成する方法もある．
 
 \section{\LaTeX 文書のサンプル}
+
 \lstinputlisting{platexsample.tex}
 
 \rule{.3\linewidth}{.25pt}
