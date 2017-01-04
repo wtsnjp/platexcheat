@@ -1,5 +1,5 @@
 % typeset: ptex2pdf -l latexsheet.tex
-\documentclass[10pt,a4paper,landscape]{jarticle}
+\documentclass[10pt,a4paper,landscape,draft]{jarticle}
 
 % 使用パッケージ
 \usepackage[small]{titlesec}
@@ -40,7 +40,8 @@
 %% 列挙用テーブル
 \makeatletter
 \def\set@etsep#1#2{\def\etcolsep{#1}\def\etitemsep{#2}}
-\newenvironment{entable}[3][\quad\qquad]{\set@etsep#1\relax\relax
+\newenvironment{entable}[3][\quad\qquad]{%
+  \set@etsep#1\relax\relax
   \begin{tabular}{%
     @{}*{\the\numexpr#3-1}{*{\the\numexpr#2-1}{l@{\etcolsep}}l@{\etitemsep}}%
     *{\the\numexpr#2-1}{l@{\etcolsep}}l@{}}}{%
@@ -50,6 +51,7 @@
 
 %% ユーザ用マクロ
 \chardef\vbar=`\| \chardef\bs=`\\
+\newcommand{\mboxtt}[1]{\mbox{\texttt{#1}}}
 \newcommand{\Meta}[1]{$\langle$\mbox{}\emph{#1}\mbox{}$\rangle$}
 \newcommand{\psp}{\phantom{ }}                                       % いずれ除去
 \newlength{\MyLen}                                                   % いずれ除去
@@ -116,7 +118,7 @@
 
 \subsection{主な標準クラスオプション}
 
-\begin{entable}[\enspace\quad]{2}{2}
+\begin{entable}[\enspace\qquad]{2}{2}
 \mergecol{4}{%
   |a4paper|/|a5paper|/|b4paper|/|b5paper|\enspace 用紙サイズ（B系列はJIS規格）} \\
 |a4j|/|a5j|/|b4j|/|b5j| & 上記より余白が狭い & |landscape| & 用紙を横向き \\
@@ -142,7 +144,7 @@
 
 \subsection{ページスタイル}
 
-\begin{entable}[\enspace\quad]{2}{2}
+\begin{entable}[\enspace\qquad]{2}{2}
 |empty| & 空のヘッダ・フッタ & |plain| & ノンブル（ページ番号） \\
 |headings| & 柱とノンブル & |myheadings| & カスタムの柱
 \end{entable}
@@ -167,7 +169,7 @@
 
 %\subsection{見出し}
 
-\begin{entable}[\enspace\enspace]{2}{3}
+\begin{entable}[\enspace\quad]{2}{3}
 |\part| & 部 & |\chapter| & 章 & |\section| & 節 \\
 |\subsection| & 小節 & |\subsubsection| & 小々節 & |\pragraph| & 段落 \\
 |\subpragraph| & 小段落 \\
@@ -178,7 +180,7 @@
 
 \subsection{箇条書き}
 
-\begin{entable}[\enspace\quad]{2}{2}
+\begin{entable}[\enspace\qquad]{2}{2}
 |\begin{itemize}| & 記号付き & |\begin{enumerate}| & 連番付き \\
 |\begin{description}| & 見出し付き \\
 \end{entable}
@@ -193,9 +195,9 @@
 \end{entable}
 
 各環境中 |\caption[|\Meta{図表目次用}|]{|\Meta{説明文}|}| でキャプションを付けられる．
-\Meta{位置}は次の文字の組み合わせで指定：$\mathtt{t}=\mbox{ページ上部}$，
-$\mathtt{b}=\mbox{ページ下部}$，$\mathtt{p}=\mbox{独立ページ}$，$\mathtt{h}=\mbox{その場}$，
-$\mathtt{!}=\mbox{条件が悪くても指定位置に配置}$．
+\Meta{位置}は次の文字の組み合わせで指定：$\mboxtt{t}=\mbox{ページ上部}$，
+$\mboxtt{b}=\mbox{ページ下部}$，$\mboxtt{p}=\mbox{独立ページ}$，$\mboxtt{h}=\mbox{その場}$，
+$\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 
 \subsection{引用と注釈}
 
@@ -271,7 +273,7 @@ $\mathtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 
 \subsection{配置}
 
-\begin{entable}{3}{1}
+\begin{entable}[\qquad]{3}{1}
 |\begin{center}| & |\centering| & 中央寄せ \\
 |\begin{flushleft}| & |\raggedright| & 左寄せ \\
 |\begin{flushright}| & |\raggedleft| & 右寄せ \\
@@ -348,48 +350,40 @@ em-dash & |---| & Yes---or no? & 挿入句の導入など \\
 
 \begin{entable}{2}{1}
 |\today| & 現在の日付．|\西暦|, |\和暦|で形式を変更可能 \\
-|\TeX|/|\LaTeX|/|\LaTeXe| & ロゴ\TeX/\LaTeX/\LaTeXe \\
+|\TeX|/|\LaTeX|/|\LaTeXe| & \TeX/\LaTeX/\LaTeXe \\
 \end{entable}
 
 \section{表組み}
 
-\subsection{tabbing環境}
-\begin{tabular}{@{}l@{\hspace{1.5ex}}l@{\hspace{10ex}}l@{\hspace{1.5ex}}l@{}}
-\verb!\=!  &  タブ位置を設定． &
-\verb!\>!  &  次のタブ位置に移動．
-\end{tabular}
-
-\verb!\kill!命令を用いると非表示行によってタブ位置を指定することができる．
-通常は \verb!\\! で行の終端を指定する．
-
 \subsection{tabular環境}
-\verb!\begin{array}[!\Meta{位置指定}\verb!]{!\Meta{列指定}\verb!}!   \\
-\verb!\begin{tabular}[!\Meta{位置指定}\verb!]{!\Meta{列指定}\verb!}! \\
-\verb!\begin{tabular*}{!\Meta{幅}\verb!}[!\Meta{位置指定}\verb!]{!\Meta{列指定}\verb!}!
 
-\subsubsection{列指定子}
-\settowidth{\MyLen}{\texttt{p}\{\Meta{区切り}\}..}
-\begin{tabular}{@{}p{\the\MyLen}@{}p{\linewidth-\the\MyLen}@{}}
-\texttt{l}     &  左寄せの列． \\
-\texttt{c}     &  中央寄せの列． \\
-\texttt{r}     &  右寄せの列． \\
-\verb!p{!\Meta{幅}\verb!}!  
-               &  幅の寸法を指定した列． \\
-\verb!@{!\Meta{区切り}\verb!}!
-               &  隣り合う列の間に\Meta{区切り}を挟み込む． \\
-\texttt{\vbar} &  表全体の縦罫線． 
-\end{tabular}
+\begin{entable}{1}{2}
+|\begin{tabular}{|\Meta{列指定}|}| & |\begin{tabular*}{|\Meta{幅}|}{|\Meta{列指定}|}| \\
+\end{entable}
 
-\subsubsection{要素}
-\settowidth{\MyLen}{\texttt{.cline.x-y..}}
-\begin{tabular}{@{}p{\the\MyLen}@{}p{\linewidth-\the\MyLen}@{}}
-\verb!\hline!           &  表全体の横罫線． \\
-\verb!\cline{!$x$\verb!-!$y$\verb!}!
-                        &  $x$列目から$y$列目までの横罫線．
-\end{tabular}
+\Meta{列指定}は次の文字を並べて指定：$\mboxtt{l}=\mbox{左寄せの列}$，
+$\mboxtt{c}=\mbox{中央寄せの列}$，$\mboxtt{r}=\mbox{右寄せの列}$，
+$\mboxtt{p\{\Meta{幅}\}}=\mbox{寸法指定の列}$，
+$\mboxtt{@\{\Meta{区切り}\}}=\mbox{列間の区切り}$，
+$\mbox{\texttt{\vbar}}=\mbox{表全体の縦罫線}$．
+具体的な使用例は本シート末尾の文書サンプル参照．
 
-\verb!\multicolumn{!\Meta{列数}\verb!}{!\Meta{列指定}\verb!}{!\Meta{テキスト}\verb!}!
-を用いると，\Meta{列数}個のセルを結合したセルを作ることができる．
+%\subsubsection{要素}
+
+\begin{entable}{2}{2}
+|&| & 列の区切り & |\hline| & 表全体の横罫線 \\
+|\\| & 行の終端 & |\cline{|\Meta{開始}|-|\Meta{終了}|}| & 範囲指定の横罫線 \\
+\end{entable}
+
+|\multicolumn{|\Meta{列数}|}{|\Meta{列指定}|}{|\Meta{テキスト}|}| を用いると，
+\Meta{列数}個の列を結合したセルを作ることができる．
+
+\subsection{tabbing環境}
+
+\begin{entable}{2}{2}
+|\=| & タブ位置を設定 & |\>| & 次のタブ位置に移動 \\
+|\\| & 行の終端 & |\kill| & 非表示行（タブ位置設定）の終端 \\
+\end{entable}
 
 \section{数式モード}
 数式モードを使うには，該当箇所を `\verb!$!' で囲うかequation環境を用いる．
