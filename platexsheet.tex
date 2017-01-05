@@ -1,13 +1,15 @@
 % typeset: ptex2pdf -l latexsheet.tex
-\documentclass[10pt,a4paper,landscape,draft]{jarticle}
+\documentclass[10pt,a4paper,landscape,dvipdfmx]{jarticle}
 
 % 使用パッケージ
 \usepackage[small]{titlesec}
-\usepackage[final]{plistings}
+\usepackage{plistings}
 \usepackage{geometry}
+\usepackage{graphicx}
 \usepackage{multicol}
 \usepackage{shortvrb}
 \usepackage{siunitx}
+\usepackage{xcolor}
 \usepackage{otf}
 \usepackage{url}
 
@@ -30,9 +32,9 @@
 \MakeShortVerb{\|}
 \lstset{
   language={[LaTeX]TeX},
-  basicstyle={\small\ttfamily},
-  commentstyle={\small\itshape},
-  keywordstyle={\small\ttfamily\bfseries},
+  basicstyle={\scriptsize\ttfamily},
+  commentstyle={\scriptsize\textcolor{gray}},
+  keywordstyle={\scriptsize\ttfamily\bfseries},
   columns=[l]{fullflexible}}
 
 % マクロ定義
@@ -280,9 +282,10 @@ $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 \subsection{水平スペース（文字送り方向）}
 
 \begin{entable}[\enspace\quad]{2}{4}
-\verb*!\ ! & 空白 & |\enspace| & \SI{0.5}{em} & |\quad| & \SI{1}{em} & |\,| & 小さな空白 \\
+\verb*!\ ! & 空白 & |\enspace| & \SI{0.5}{em} & |\quad| & \SI{1}{em} & |\,|
+  & \SI{1/6}{em}程度 \\
 |~| & 改行禁止 & \mergecol{2}{\texttt{\bs hspace\{}\Meta{長さ}\texttt{\}}}
-  & |\qquad| & \SI{2}{em} & |\!| & 負の空白 \\
+  & |\qquad| & \SI{2}{em} \\
 \end{entable}
 
 |\hfil|, |\hfill| は無限に伸びる空白で後者がより強力．英大文字で終わる文のピリオド直前に
@@ -308,6 +311,8 @@ $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 
 \section{記号・その他}
 
+%一部の命令は後述する数式モード内でも利用できる．
+
 \subsection{一般的な記号}
 
 \begin{entable}[\enspace\qquad]{2}{4}
@@ -315,16 +320,6 @@ $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 \$ & |\$| & \P & |\P| & \ddag & |\ddag| & \textbullet & |\textbullet| \\
 \% & |\%| & \S & |\S| & \pounds & |\pounds| & \texttrademark & |\texttrademark| \\
 \# & |\#| & \dots & |\dots| & \copyright & |\copyright| & \textregistered & |\textregistered| \\
-\end{entable}
-
-\subsection{アクセント類}
-
-\begin{entable}[\enspace\qquad]{2}{6}
-!` & |!`| & ?` & |?`| & \.a & |\.a| & \'a & |\'a| & \"a & |\"a| & \`a & |\`a| \\
-\^a & |\^a| & \=a & |\=a| & \~a & |\~a| & \aa & |\aa| & \AA & |\AA| & \ae & |\ae| \\
-\AE & |\AE| & \b a & |\b a| & \c c & |\c c| & \d a & |\d a| & \H a & |\H a| & \i & |\i| \\
-\j & |\j| & \l & |\l| & \L & |\L| & \o & |\o| & \O & |\O| & \oe & |\oe| \\
-\OE & |\OE| & \r a & |\r a| & \ss & |\ss| & \t oo & |\t oo| & \u a & |\u a| & \v a & |\v a| \\
 \end{entable}
 
 \subsection{括弧類}
@@ -340,6 +335,16 @@ $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 ハイフン & |-| & X-ray & 単語内，2単語の連結 \\
 en-dash & |--| & 1--5 & 範囲を表す場合など \\
 em-dash & |---| & Yes---or no? & 挿入句の導入など \\
+\end{entable}
+
+\subsection{アクセント類}
+
+\begin{entable}[\enspace\qquad]{2}{6}
+!` & |!`| & ?` & |?`| & \.a & |\.a| & \'a & |\'a| & \"a & |\"a| & \`a & |\`a| \\
+\^a & |\^a| & \=a & |\=a| & \~a & |\~a| & \aa & |\aa| & \AA & |\AA| & \ae & |\ae| \\
+\AE & |\AE| & \b a & |\b a| & \c c & |\c c| & \d a & |\d a| & \H a & |\H a| & \i & |\i| \\
+\j & |\j| & \l & |\l| & \L & |\L| & \o & |\o| & \O & |\O| & \oe & |\oe| \\
+\OE & |\OE| & \r a & |\r a| & \ss & |\ss| & \t oo & |\t oo| & \u a & |\u a| & \v a & |\v a| \\
 \end{entable}
 
 \subsection{その他}
@@ -372,8 +377,7 @@ $\mboxtt{\vbar}=\mbox{表全体の縦罫線}$．
 |\\| & 行の終端 & |\cline{|\Meta{開始}|-|\Meta{終了}|}| & 範囲指定の横罫線 \\
 \end{entable}
 
-|\multicolumn{|\Meta{列数}|}{|\Meta{列指定}|}{|\Meta{テキスト}|}| を用いると，
-\Meta{列数}個の列を結合したセルを作ることができる．
+セルの結合：|\multicolumn{|\Meta{列数}|}{|\Meta{列指定}|}{|\Meta{テキスト}|}|．
 
 \subsection{tabbing環境}
 
@@ -384,7 +388,158 @@ $\mboxtt{\vbar}=\mbox{表全体の縦罫線}$．
 
 \section{数式モード}
 
+\begin{entable}{2}{2}
+|$|\Meta{数式}|$| & インライン数式 & |\begin{equation}| & 別行立て数式 \\
+|\[|\Meta{数式}|\]| & \mergecol{3}{別行立て数式（式番号なし）} \\
+\end{entable}
 
+\subsection{数式の基本}
+
+\begin{entable}[\enspace\quad]{2}{5}
+$p'=0$ & |p'=0| & $a_1$ & |a_1| & $x^{2}$ & |x^2| & $\frac{3}{4}$ & |\frac{3}{4}|
+  & $\sqrt[5]{6}$ & |\sqrt[5]{6}| \\
+\mergecol{10}{\texttt{\bs begin\{tabular\}\{\Meta{列指定}\}}\enspace 行列用の表} \\
+\end{entable}
+
+数式モードではテキスト中で使える水平スペース命令のほかに以下が使える．
+
+\begin{entable}{2}{3}
+|\:| & \SI{4/18}{em}程度 & |\;| & \SI{5/18}{em}程度 & |\!| & \SI{-3/18}{em}程度 \\
+\end{entable}
+
+\subsection{スタイルと書体}
+
+\begin{entable}{2}{2}
+|\deisplaystyle| & 別行立てスタイル & |\textstyle| & 本文スタイル \\
+\end{entable}
+
+書体の変更には |\mathrm|, |\mathbf|, |\mathit|,
+|\mathsf|, |\mathtt|, |\mathmc|, |\mathgt| および |\mathnormal| が利用可（組み合わせは不可）．
+英大文字に対してのみカリグラフ体への変更命令 |\mathcal| が利用可（例：$\mathcal{ABC}$）．
+
+\subsection{上下の装飾}
+
+\begin{entable}[\enspace\quad]{2}{3}
+$\overline{ab}$ & |\overline{ab}| & $\overrightarrow{ab}$ & |\overrightarrow{ab}|
+  & $\widehat{ab}$ & |\widehat{ab}| \\
+$\underline{ab}$ & |\underline{ab}| & $\overleftarrow{ab}$ & |\overleftarrow{ab}|
+  & $\widetilde{ab}$ & |\widetilde{ab}| \\[2pt]
+\mergecol{6}{%
+  $\overbrace{a+b}$\enspace \texttt{\bs overbrace\{a+b\}}\quad
+  $\underbrace{a+b}$\enspace \texttt{\bs underbrace\{a+b\}}} \\
+\end{entable}
+
+\subsection{ギリシャ文字}
+
+\begin{entable}[\enspace\quad]{2}{6}
+$\alpha$ & |\alpha| & $\beta$ & |\beta| & $\gamma$ & |\gamma| & $\delta$ & |\delta| & $\epsilon$ & |\epsilon| \\
+$\zeta$ & |\zeta| & $\eta$ & |\eta| & $\theta$ & |\theta| & $\iota$ & |\iota| & $\kappa$ & |\kappa| \\
+$\lambda$ & |\lambda| & $\mu$ & |\mu| & $\nu$ & |\nu| & $\xi$ & |\xi| & $\pi$ & |\pi| \\
+$\rho$ & |\rho| & $\sigma$ & |\sigma| & $\tau$ & |\tau| & $\upsilon$ & |\upsilon| & $\phi$ & |\phi| \\
+$\chi$ & |\chi| & $\omega$ & |\omega| & $\Gamma$ & |\Gamma| & $\Delta$ & |\Delta| & $\Theta$ & |\Theta| \\
+$\Lambda$ & |\Lambda| & $\Xi$ & |\Xi| & $\Pi$ & |\Pi| & $\Sigma$ & |\Sigma| & $\Upsilon$ & |\Upsilon| \\
+$\Phi$ & |\Phi| & $\Psi$ & |\Psi| & $\Omega$ & |\Omega| & $\varpi$ & |\varpi| & $\varphi$ & |\varphi| \\
+$\varepsilon$ & \mergecol{3}{\texttt{\bs varepsilon}}
+  & $\vartheta$ & \mergecol{3}{\texttt{\bs vartheta}} & $\varsigma$ & |\varsigma| \\
+\end{entable}
+
+\subsection{二項演算子}
+
+\begin{entable}[\enspace\quad]{2}{4}
+$\times$ & |\times| & $\div$ & |\div| & $\land$ & |\land| & $\triangleright$ & |\triangleright| \\
+$\cdot$ & |\cdot| & $\mp$ & |\mp| & $\lor$ & |\lor| & $\bigtriangleup$ & |\bigtriangleup| \\
+$\ast$ & |\ast| & $\pm$ & |\pm| & $\uplus$ & |\uplus| & $\bigtriangledown$ & |\bigtriangledown| \\
+$\star$ & |\star| & $\cap$ & |\cap| & $\sqcap$ & |\sqcap| & $\triangleleft$ & |\triangleleft| \\
+$\setminus$ & |\setminus| & $\cup$ & |\cup| & $\sqcup$ & |\sqcup| & $\dagger$ & |\dagger| \\
+$\oslash$ & |\oslash| & $\odot$ & |\odot| & $\bullet$ & |\bullet| & $\ddagger$ & |\ddagger| \\
+$\otimes$ & |\otimes| & $\oplus$ & |\oplus| & $\circ$ & |\circ| & $\bigcirc$ & |\bigcirc| \\
+$\ominus$ & |\ominus| & $\wr$ & |\wr| & $\amalg$ & |\amalg| & & |\mathbin{|\Meta{記号}|}| \\
+\end{entable}
+
+\subsection{関係演算子}
+
+\begin{entable}[\enspace\quad]{2}{5}
+$\neq$ & |\neq| & $\supset$ & |\supset| & $\perp$ & |\perp| & $\parallel$ & |\parallel| & $\mid$ & |\mid| \\
+$\leq$ & |\leq| & $\subset$ & |\subset| & $\equiv$ & |\equiv| & $\doteq$ & |\doteq| & $\asymp$ & |\asymp| \\
+$\geq$ & |\geq| & $\supseteq$ & |\supseteq| & $\sim$ & |\sim| & $\simeq$ & |\simeq| & $\models$ & |\models| \\
+$\gg$ & |\gg| & $\subseteq$ & |\subseteq| & $\cong$ & |\cong| & $\approx$ & |\approx| & $\propto$ & |\propto| \\
+$\ll$ & |\ll| & $\sqsubseteq$ & |\sqsubseteq| & $\succ$ & |\succ| & $\succeq$ & |\succeq| & $\dashv$ & |\dashv| \\
+$\in$ & |\in| & $\sqsupseteq$ & |\sqsupseteq| & $\prec$ & |\prec| & $\preceq$ & |\preceq| & $\vdash$ & |\vdash| \\
+$\ni$ & |\ni| & $\bowtie$ & |\bowtie| & $\not$ & |\not| &
+  & \mergecol{3}{\texttt{\bs mathrel\{}\Meta{記号}\texttt{\}}} \\
+\end{entable}
+
+関係演算子の前に |\not| を前置すると，その否定形を作ることができる．
+
+\subsection{大型演算子}
+
+\begin{entable}[\enspace\quad]{2}{4}
+$\int$ & |\int| & $\bigotimes$ & |\bigotimes| & $\bigcap$ & |\bigcap| & $\bigcup$ & |\bigcup| \\[3pt]
+$\oint$ & |\oint| & $\bigotimes$ & |\bigotimes| & $\biguplus$ & |\biguplus| & $\bigsqcup$ & |\bigsqcup| \\[3pt]
+$\sum$ & |\sum| & $\bigodot$ & |\bigodot| & $\bigvee$ & |\bigvee| & $\bigwedge$ & |\bigwedge| \\[3pt]
+$\prod$ & |\prod| & $\coprod$ & |\coprod| & $\smallint$ & |\smallint| & & |\mathop{|\Meta{記号}|}| \\
+\end{entable}
+
+\subsection{括弧類}
+
+\begin{entable}[\enspace\quad]{2}{6}
+$\langle$ & |\langle| & $\lceil$ & |\lceil| & $\lfloor$ & |\lfloor| 
+& \scalebox{.5}{$\big\lgroup$} & |\lgroup| & \scalebox{.5}{$\big\lmoustache$} & |\lmoustache| \\
+$\rangle$ & |\rangle| & $\rceil$ & |\rceil| & $\rfloor$ & |\rfloor| 
+& \scalebox{.5}{$\big\rgroup$} & |\rgroup| & \scalebox{.5}{$\big\rmoustache$} & |\rmoustache| \\
+\mergecol{2}{$\,\vbar$ \texttt{\vbar} \quad $\|$ \texttt{\bs\vbar}} &
+  & \mergecol{3}{\texttt{\bs mathopen\{}\Meta{記号}\texttt{\}}} &
+  & \mergecol{3}{\texttt{\bs mathclose\{}\Meta{記号}\texttt{\}}} \\
+\end{entable}
+
+|\left|\Meta{開き括弧}\Meta{数式}|\right|\Meta{閉じ括弧} で括弧類のサイズを自動調整．
+
+\subsection{矢印類}
+
+\begin{entable}[\thinspace\enspace]{2}{3}
+$\to$ & |\to| & $\hookrightarrow$ & |\hookrightarrow| & $\Uparrow$ & |\Uparrow| \\
+$\gets$ & |\gets| & $\hookleftarrow$ & |\hookleftarrow| & $\Downarrow$ & |\Downarrow| \\
+$\nearrow$ & |\nearrow| & $\leftrightarrow$ & |\leftrightarrow| & $\rightleftharpoons$ & |\rightleftharpoons| \\
+$\searrow$ & |\searrow| & $\rightharpoonup$ & |\rightharpoonup| & $\longrightarrow$ & |\longrightarrow| \\
+$\nwarrow$ & |\nwarrow| & $\rightharpoondown$ & |\rightharpoondown| & $\Longrightarrow$ & |\Longrightarrow| \\
+$\swarrow$ & |\swarrow| & $\leftharpoonup$ & |\leftharpoonup| & $\longleftarrow$ & |\longleftarrow| \\
+$\mapsto$ & |\mapsto| & $\leftharpoondown$ & |\leftharpoondown| & $\Longleftarrow$ & |\Longleftarrow| \\
+$\longmapsto$ & |\longmapsto| & $\Leftrightarrow$ & |\Leftrightarrow| & $\longleftrightarrow$ & |\longleftrightarrow| \\
+$\Rightarrow$ & |\Rightarrow| & $\updownarrow$ & |\updownarrow| & $\Longleftrightarrow$ & |\Longleftrightarrow| \\
+$\Leftarrow$ & |\Leftarrow| & $\downarrow$ & |\downarrow| & & |\iff|（前後の空白大） \\
+$\uparrow$ & |\uparrow| & $\Updownarrow$ & |\Updownarrow| \\
+\end{entable}
+
+\subsection{関数名}
+
+\begin{entable}[\quad\quad]{1}{8}
+|\log| & |\sin| & |\arcsin| & |\sinh| & |\max| & |\arg| & |\exp| & |\ker| \\
+|\lg| & |\cos| & |\arccos| & |\cosh| & |\min| & |\lim| & |\Pr| & |\dim| \\
+|\ln| & |\tan| & |\arctan| & |\tanh| & |\sup| & |\limsup| & |\gcd| & |\hom| \\
+|\sec| & |\csc| & |\cot| & |\coth| & |\inf| & |\liminf| & |\deg| & |\det| \\
+\end{entable}
+
+\subsection{アクセント類}
+
+\begin{entable}[\enspace\qquad]{2}{4}
+$\bar{a}$ & |\bar{a}| & $\acute{a}$ & |\acute{a}| & $\dot{a}$ & |\dot{a}| & $\ddot{a}$ & |\ddot{a}| \\
+$\vec{a}$ & |\vec{a}| & $\breve{a}$ & |\breve{a}| & $\grave{a}$ & |\grave{a}| & $\mathring{a}$ & |\mathring{a}| \\
+$\hat{a}$ & |\hat{a}| & $\check{a}$ & |\check{a}| & $\tilde{a}$ & |\tilde{a}| &  &  \\
+\end{entable}
+
+\subsection{その他}
+
+\begin{entable}[\enspace\quad]{2}{4}
+$\spadesuit$ & |\spadesuit| & $\flat$ & |\flat| & $\circ$ & |\circ| & $\nabla$ & |\nabla| \\
+$\heartsuit$ & |\heartsuit| & $\natural$ & |\natural| & $\smile$ & |\smile| & $\partial$ & |\partial| \\
+$\diamondsuit$ & |\diamondsuit| & $\sharp$ & |\sharp| & $\frown$ & |\frown| & $\infty$ & |\infty| \\
+$\clubsuit$ & |\clubsuit| & $\star$ & |\star| & $\top$ & |\top| & $\angle$ & |\angle| \\
+$\diamond$ & |\diamond| & $\Re$ & |\Re| & $\bot$ & |\bot| & $\triangle$ & |\triangle| \\
+$\backslash$ & |\backslash| & $\Im$ & |\Im| & $\forall$ & |\forall| & $\exists$ & |\exists| \\
+$\aleph$ & |\aleph| & $\hbar$ & |\hbar| & $\neg$ & |\neg| & $\emptyset$ & |\emptyset| \\
+$\ell$ & |\ell| & $\wp$ & |\wp| & $\imath$ & |\imath| & $\jmath$ & |\jmath| \\[-6pt]
+$\cdots$ & |\cdots| & $\ldots$ & |\ldots| & \raisebox{-2pt}{$\vdots$} & |\vdots| & \raisebox{-2pt}{$\ddots$} & |\ddots| \\
+\end{entable}
 
 \section{相互参照・目次・索引・文献リスト}
 
@@ -402,12 +557,11 @@ $\mboxtt{\vbar}=\mbox{表全体の縦罫線}$．
 
 \begin{entable}[\enspace\qquad]{3}{2}
 |toc| & |\tableofcontents|
-  & \mergecol{4}{目次（|tocdepth| カウンタで掲載項目を調整可）} \\
+  & \mergecol{4}{目次（|tocdepth| カウンタで掲載項目を調整）} \\
 |lof| & |\tableoffigures| & 図目次 & |lot| & |\tableoftables| & 表目次 \\
 \end{entable}
 
-掲載項目は自動的に収集されるが，手動で追加することも可能：\\
-|\addcontentsline{|\Meta{目次の種類}|}{|\Meta{項目の種類}|}{|\Meta{項目}|}|
+項目の追加：|\addcontentsline{|\Meta{目次の種類}|}{|\Meta{項目の種類}|}{|\Meta{項目}|}|．
 
 \subsection{索引}
 
@@ -435,11 +589,12 @@ $\mboxtt{\vbar}=\mbox{表全体の縦罫線}$．
 \scriptsize
 
 \LaTeXe 版 {\copyright} 2006 Winston Chang \\
-\url{http://www.stdout.org/~winston/latex/} \\
+\url{http://www.stdout.org/~winston/latex/}
+
 p\LaTeXe 版 {\copyright} 2017 Takuto Asakura \\
 \url{https://wtsnjp.com/pdf/platexsheet.pdf}
 
-バージョン：1.1, 作成日：2017/01/03
+バージョン：2.0-beta, 作成日：2017/01/05
 
 \end{multicols}
 \end{document}

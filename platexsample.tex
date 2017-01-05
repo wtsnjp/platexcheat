@@ -1,33 +1,29 @@
-\documentclass[dvipdfmx,11pt]{jarticle}
-\usepackage{otf,hyperref}
+\documentclass[12pt,a4j,dvipdfmx,draft]{jarticle}
+\usepackage{url}  % \url 命令を利用
+\usepackage{otf}
 \title{p\LaTeXe をもっと便利に}
-\author{朝倉卓人\thanks{\texttt{wtsnjp@gmail.com}}}
+\author{朝倉卓人\thanks{e-mail: \texttt{wtsnjp@gmail.com}}}
 
 \begin{document}
 \maketitle
 
-\section{発展的なp\LaTeXe の利用法}
-\subsection{マクロ}
-本シートで紹介しているのはp\LaTeXe 標準の命令や環境
-ばかりだがp\LaTeXe にはユーザ独自の\emph{マクロ}を
-定義するしくみがある．
+\section*{\LaTeX 関連の情報や成果物を入手しよう}
+近年人気のディストリビューション（\TeX\ Live等）を利用している場合，
+自力で入手しなくとも数多くのクラスやパッケージが最初からインストール
+されている．
 
-\subsection{p\LaTeXe 関連の情報や成果物を入手する}
-近年人気の\TeX ディストリビューション（\TeX\ Liveなど）
-を利用している場合は，自力で入手しなくとも数多くのクラスや
-パッケージ最初からインストールされている．より多くの情報や
-成果物が必要な場合は表\ref{表：サイト集}のサイトを訪れる．
+より多くの情報や成果物を入手するには表\ref{表：サイト集}掲載のサイトを
+訪れるとよい．
 
 \begin{table}[bth!]
 \centering
-\caption{\emph{便利なサイト}．英語のサイトも含む．}
+\caption{\emph{有益なサイト}．英語のサイトも含まれている．}
 \label{表：サイト集}
-\begin{tabular}{ll}
-\emph{サイト名} & \emph{説明} \\ \hline
-\href{https://www.ctan.org/}{CTAN} 
-  & 世界から\TeX 関連成果物が集められている． \\
-\href{https://texwiki.texjp.org/}{{\TeX} Wiki}
-  & \TeX に関する日本語情報が集積． \\
+\begin{tabular}{lll}
+\emph{サイト名} & \emph{URL} & \emph{説明} \\ \hline
+\TeX\ Wiki & \url{https://texwiki.texjp.org/} & 日本語情報の宝庫 \\
+TUG & \url{https://www.tug.org/} & \TeX\ Users Groupのサイト \\
+CTAN & \url{https://www.ctan.org/} & 世界から成果物が集まる \\
 \end{tabular}
 \end{table}
 \end{document}
