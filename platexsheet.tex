@@ -83,7 +83,7 @@
 コメント & `|%|' 以降は行末までコメントとして扱われる（無視される） \\
 \end{entable}
 
-すべてではないが，多くの命令や環境は入れ子にできる．
+すべてではないが，多くの命令や環境は入れ子にすることが可能．
 
 \subsection{長さの単位}
 
@@ -170,12 +170,12 @@
 
 \begin{entable}[\enspace\quad]{2}{3}
 |\part| & 部 & |\chapter| & 章 & |\section| & 節 \\
-|\subsection| & 小節 & |\subsubsection| & 小々節 & |\pragraph| & 段落 \\
-|\subpragraph| & 小段落 \\
+|\subsection| & 小節 & |\subsubsection| & 小々節 & |\paragraph| & 段落 \\
+|\subparagraph| & 小段落 \\
 \end{entable}
 
 これらの命令は共通の書式をもつ：\Meta{命令}|[|\Meta{目次用の見出し}|]{|\Meta{見出し}|}|．
-\Meta{命令}の直後に |*| を付けた場合，見出し番号が付かず目次にも載らない．
+\Meta{命令}の直後に `|*|' を付けた場合，見出し番号が付かず目次にも載らない．
 
 \subsection{箇条書き}
 
@@ -248,7 +248,7 @@ $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 |\scriptsize| \> \scriptsize{スクリプトサイズ}\\
 |\footnotesize| \> \footnotesize{脚注サイズ}\\
 |\small| \> \small{小さい}\\
-|\normalsize| \> \normalsize{標準}\\
+|\normalsize| \> \normalsize{標準サイズ}\\
 |\large| \> \large{大きい}\\
 |\Large| \= \Large{超大きい}\\
 |\LARGE| \> \LARGE{超々大きい}\\
@@ -302,10 +302,11 @@ $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 
 \subsection{行とページ}
 
-\begin{entable}[\enspace\enspace]{2}{2}
-|\par| & 改段落（空行と同じ） & |\noindent| & インデントしない \\
-|\\*| & 改行（改ページなし） & |\\[|\Meta{長さ}|]| & 改行（縦スペース付加） \\
-|\newpage| & 改ページ（段移動） & |\clearpage| & 改ページ（全図表出力） \\
+\begin{entable}[\enspace]{2}{2}
+|\par| & 改段落（空行と同じ） & |\noindent| & 行のインデントなし \\
+|\\*| & 改行（改ページ禁止） & |\\[|\Meta{長さ}|]| & 改行（＋垂直スペース） \\
+|\linebreak| & 行分割を促進 & |\pagebreak| & ページ分割を促進 \\
+|\newpage| & 改ページ（段移動） & |\clearpage| & 全図表出力＋改ページ \\
 \end{entable}
 
 %|\break| は段落内では改行（|\\| とは挙動が異なる），段落間では改ページ．
@@ -314,20 +315,22 @@ $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 
 %一部の命令は後述する数式モード内でも利用できる．
 
-\subsection{一般的な記号}
+\subsection{特殊記号}
 
-\begin{entable}[\enspace\qquad]{2}{4}
-\& & |\&| & \_ & |\_| & \dag & |\dag| & \textbackslash & |\textbackslash| \\
-\$ & |\$| & \P & |\P| & \ddag & |\ddag| & \textbullet & |\textbullet| \\
-\% & |\%| & \S & |\S| & \pounds & |\pounds| & \texttrademark & |\texttrademark| \\
-\# & |\#| & \dots & |\dots| & \copyright & |\copyright| & \textregistered & |\textregistered| \\
+\begin{entable}[\thinspace\quad]{2}{4}
+\& & |\&| & \dag & |\dag| & \textasciitilde & |\textasciitilde| & \textbackslash & |\textbackslash| \\
+\% & |\%| & \ddag & |\ddag| & \textasciicircum & |\textasciicircum| & \textbar & |\textbar| \\
+\# & |\#| & \dots & |\dots| & \texttrademark & |\texttrademark| & \textbardbl & |\textbardbl| \\
+\_ & |\_| & \copyright & |\copyright| & \textregistered & |\textregistered| & \textbullet & |\textbullet| \\
+\$ & |\$| & \pounds & |\pounds| & \textordfeminine & |\textordfeminine| & \textless & |\textless| \\
+\P & |\P| & \S & |\S| & \textordmasculine & |\textordmasculine| & \textgreater & |\textgreater| \\
 \end{entable}
 
 \subsection{括弧類}
 
 \begin{entable}{2}{6}
-` & |`| & `` & |``| & \{ & |\{| & \lbrack & |[| & ( & |(| & \textless & |\textless| \\
-' & |'| & '' & |''| & \} & |\}| & \rbrack & |]| & ) & |)| & \textgreater & |\textgreater| \\
+` ' & \verb*!` '! & `` '' & \verb*!`` ''! & \{ \} & \verb*!\{ \}!
+  & [ ] & \verb*![ ]! & ( ) & \verb*!( )! \\
 \end{entable}
 
 \subsection{ダッシュ類}
@@ -414,8 +417,8 @@ $p'=0$ & |p'=0| & $a_1$ & |a_1| & $x^{2}$ & |x^2| & $\frac{3}{4}$ & |\frac{3}{4}
 \end{entable}
 
 書体の変更には |\mathrm|, |\mathbf|, |\mathit|,
-|\mathsf|, |\mathtt|, |\mathmc|, |\mathgt| および |\mathnormal| が利用可（組み合わせは不可）．
-英大文字に対してのみカリグラフ体への変更命令 |\mathcal| が利用可（例：$\mathcal{ABC}$）．
+|\mathsf|, |\mathtt|, |\mathmc|, |\mathgt| および |\mathnormal| を用いる（組み合わせは不可）．
+英大文字に対してのみカリグラフ体への変更命令 |\mathcal| が利用できる（例：$\mathcal{ABC}$）．
 
 \subsection{上下の装飾}
 
@@ -475,7 +478,7 @@ $\ni$ & |\ni| & $\bowtie$ & |\bowtie| & $\not$ & |\not| &
 
 \begin{entable}[\enspace\quad]{2}{4}
 $\int$ & |\int| & $\bigotimes$ & |\bigotimes| & $\bigcap$ & |\bigcap| & $\bigcup$ & |\bigcup| \\[3pt]
-$\oint$ & |\oint| & $\bigotimes$ & |\bigotimes| & $\biguplus$ & |\biguplus| & $\bigsqcup$ & |\bigsqcup| \\[3pt]
+$\oint$ & |\oint| & $\bigoplus$ & |\bigoplus| & $\biguplus$ & |\biguplus| & $\bigsqcup$ & |\bigsqcup| \\[3pt]
 $\sum$ & |\sum| & $\bigodot$ & |\bigodot| & $\bigvee$ & |\bigvee| & $\bigwedge$ & |\bigwedge| \\[3pt]
 $\prod$ & |\prod| & $\coprod$ & |\coprod| & $\smallint$ & |\smallint| & & |\mathop{|\Meta{記号}|}| \\
 \end{entable}
@@ -530,10 +533,10 @@ $\hat{a}$ & |\hat{a}| & $\check{a}$ & |\check{a}| & $\tilde{a}$ & |\tilde{a}| & 
 \subsection{その他}
 
 \begin{entable}[\enspace\quad]{2}{4}
-$\spadesuit$ & |\spadesuit| & $\flat$ & |\flat| & $\circ$ & |\circ| & $\nabla$ & |\nabla| \\
+$\spadesuit$ & |\spadesuit| & $\flat$ & |\flat| & $\surd$ & |\surd| & $\nabla$ & |\nabla| \\
 $\heartsuit$ & |\heartsuit| & $\natural$ & |\natural| & $\smile$ & |\smile| & $\partial$ & |\partial| \\
 $\diamondsuit$ & |\diamondsuit| & $\sharp$ & |\sharp| & $\frown$ & |\frown| & $\infty$ & |\infty| \\
-$\clubsuit$ & |\clubsuit| & $\star$ & |\star| & $\top$ & |\top| & $\angle$ & |\angle| \\
+$\clubsuit$ & |\clubsuit| & $\prime$ & |\prime| & $\top$ & |\top| & $\angle$ & |\angle| \\
 $\diamond$ & |\diamond| & $\Re$ & |\Re| & $\bot$ & |\bot| & $\triangle$ & |\triangle| \\
 $\backslash$ & |\backslash| & $\Im$ & |\Im| & $\forall$ & |\forall| & $\exists$ & |\exists| \\
 $\aleph$ & |\aleph| & $\hbar$ & |\hbar| & $\neg$ & |\neg| & $\emptyset$ & |\emptyset| \\
@@ -556,7 +559,7 @@ $\cdots$ & |\cdots| & $\ldots$ & |\ldots| & \raisebox{-2pt}{$\vdots$} & |\vdots|
 \subsection{目次}
 
 \begin{entable}[\enspace\qquad]{3}{2}
-|toc| & |\listofcontents|
+|toc| & |\tableofcontents|
   & \mergecol{4}{目次（|tocdepth| カウンタで掲載項目を調整）} \\
 |lof| & |\listoffigures| & 図目次 & |lot| & |\listoftables| & 表目次 \\
 \end{entable}
@@ -565,11 +568,12 @@ $\cdots$ & |\cdots| & $\ldots$ & |\ldots| & \raisebox{-2pt}{$\vdots$} & |\vdots|
 
 \subsection{索引}
 
-\begin{entable}{2}{2}
-|\index{|\Meta{読み}|@|\Meta{項目}|}| & 索引項目を指定 \\ %& |\printindex| & 索引を出力 \\
+\begin{entable}{2}{1}
+|\index{|\Meta{上位項目}|!|\Meta{読み}|@|\Meta{項目}\texttt{\vbar}\Meta{体裁}|}|
+  & 索引項目 \\ %（`\texttt{"}' でエスケープ） & |\printindex| & 索引を出力
 \end{entable}
 
-|platex| 実行後indファイルを |mendex| で処理して，さらに |platex| を実行．
+indファイルは |mendex| で処理．索引の出力には別途パッケージが必要．
 
 \subsection{文献リスト}
 
