@@ -17,7 +17,8 @@ pLaTeX2e でよく用いられる命令を2ページの PDF にまとめたチ�
 ## 配布場所など
 
 * PDF ファイル：<https://wtsnjp.com/pdf/platexsheet.pdf>
-* ソースコード：<https://github.com/wtsnjp/platexcheat>
+* CTAN パッケージ：<https://www.ctan.org/pkg/platexcheat>
+* GitHub リポジトリ：<https://github.com/wtsnjp/platexcheat>
 
 PDF ファイルは最新版のみの配布です．それ以外はソースから各自タイプセットしてください（v1.1 以降は [h-kitagawa/plistings](https://github.com/h-kitagawa/plistings) が必要なので注意）．GitHub でのコメント・プルリクエスト歓迎です．Twitter で作者に連絡いただいても構いません．
 
