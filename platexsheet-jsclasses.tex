@@ -1,0 +1,602 @@
+% typeset: ptex2pdf -l platexsheet-jsclasses.tex
+\documentclass[9pt,a4paper,landscape,dvipdfmx,draft]{jsarticle}
+
+% 使用パッケージ
+\usepackage[small]{titlesec}
+\usepackage[final]{plistings}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{shortvrb}
+\usepackage{siunitx}
+\usepackage{xcolor}
+\usepackage{otf}
+\usepackage{url}
+
+% ドキュメント設定
+%% ページ
+\geometry{top=.75cm, left=.75cm, right=.75cm, bottom=.75cm}
+\pagestyle{empty}
+
+%% 見出し
+\setcounter{secnumdepth}{0}
+\titlespacing{\section}{0pt}{5pt}{0pt}
+\titlespacing{\subsection}{0pt}{0pt}{0pt}
+\titlespacing{\subsubsection}{0pt}{0pt}{0pt}
+
+%% 寸法
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt plus 0.5ex}
+
+%% コード
+\MakeShortVerb{\|}
+\lstset{
+  language={[LaTeX]TeX},
+  basicstyle={\scriptsize\ttfamily},
+  commentstyle={\scriptsize\textcolor{gray}},
+  keywordstyle={\scriptsize\ttfamily\bfseries},
+  columns=[l]{fullflexible}}
+
+% マクロ定義
+%% 列挙用テーブル
+\makeatletter
+\def\set@etsep#1#2{\def\etcolsep{#1}\def\etitemsep{#2}}
+\newenvironment{entable}[3][\quad\qquad]{%
+  \set@etsep#1\relax\relax
+  \begin{tabular}{%
+    @{}*{\the\numexpr#3-1}{*{\the\numexpr#2-1}{l@{\etcolsep}}l@{\etitemsep}}%
+    *{\the\numexpr#2-1}{l@{\etcolsep}}l@{}}}{%
+  \end{tabular}}
+\newcommand{\mergecol}[2]{\multicolumn{#1}{@{}l@{}}{#2}}
+\makeatother
+
+%% ユーザ用マクロ
+\chardef\vbar=`\| \chardef\bs=`\\
+\newcommand{\mboxtt}[1]{\mbox{\texttt{#1}}}
+\newcommand{\Meta}[1]{$\langle$\mbox{}\emph{#1}\mbox{}$\rangle$}
+
+% -----------------------------------------------------------------------
+
+\begin{document}
+
+% 三段組を開始
+\begin{multicols}{3}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+
+% 文字サイズ
+\footnotesize
+
+% タイトル
+\begin{center}
+\Large
+\textsf{p\LaTeXe チートシート{\large （\,jsclasses版）}}
+\end{center}
+
+\section{p\LaTeXe の基本}
+
+\begin{entable}{2}{1}
+\emph{命令} & `\texttt{\bs}' で始まる．必須の引数は |{}|，省略可能な引数は |[]| で囲う \\
+\emph{環境} & |\begin{|\Meta{環境名}|}| と |\end{|\Meta{環境名}|}| に挟まれた部分 \\
+\emph{コメント} & `|%|' 以降は行末までコメントとして扱われる（無視される） \\
+\end{entable}
+
+すべてではないが，多くの命令や環境は入れ子にすることが可能．
+
+\subsection{長さの単位}
+
+\begin{entable}{2}{2}
+|cm|/|mm|/|in|
+  & \mergecol{3}{一般的な長さの単位（$\SI{1}{in}=\SI{25.4}{mm}$）} \\
+|pt|/|bp|/|sp|
+  & \mergecol{3}{%
+      ポイント（$\SI{72.27}{pt}=\SI{72}{bp}=\SI{1}{in},\;\SI{65536}{sp}=\SI{1}{pt}$）} \\
+|Q|/|H|
+  & \mergecol{3}{級と歯（$\SI{1}{Q}=\SI{1}{H}=\SI{0.25}{mm}$）} \\
+|em|/|ex|\phantom{/|pt|} & |M| の幅と |x| の高さ & |zw|/|zh| & 和文文字の幅と高さ \\
+\end{entable}
+
+\section{プリアンブル}
+
+文書はクラス宣言で開始：
+|\documentclass[|\Meta{オプション}|]{|\Meta{クラス}|}|．\break
+本文はdocument環境に書く．|\documentclass| と |\begin{document}| の間は
+\emph{プリアンブル}と呼ばれ，文書全体に適用する設定などを記述する．
+
+\subsection{新ドキュメントクラス}
+
+\begin{entable}{2}{2}
+|jbook| & 横書き書籍 & |tbook| & 縦書き書籍 \\
+|jarticle| & 横書き論文 & |tarticle| & 縦書き論文 \\
+|jreport| & 横書きレポート & |treport| & 縦書きレポート \\
+\end{entable}
+
+クラスによってデフォルトのオプションや使える見出し命令などが異なる．
+
+\subsection{主なクラスオプション}
+
+\begin{entable}[\enspace\qquad]{2}{2}
+\mergecol{4}{%
+  |a4paper|/|a5paper|/|b4paper|/|b5paper|\enspace 用紙サイズ（B系列はJIS規格）} \\
+|a4j|/|a5j|/|b4j|/|b5j| & 上記より余白が狭い & |landscape| & 用紙を横向き \\
+|10pt|/|11pt|/|12pt| & 文字サイズ & |twocolumn| & 二段組 \\
+|titlepage| & タイトルを独立ページ & |twoside| & 両面印刷 \\
+|leqno| & 数式番号を左側に表示 & |dvipdfmx| & dviドライバ \\
+|fleqn| & 別行立て数式を左寄せ & |tombo| & トンボを表示 \\
+\end{entable}
+
+クラスオプションに指定したものは読み込んだパッケージへも適用される．
+
+\subsection{文書情報}
+
+\begin{entable}[\enspace\quad]{2}{2}
+|\author{|\Meta{著者}|}|
+  & \mergecol{3}{文書の著者．複数のときは \texttt{\bs and} で区切る} \\
+|\thanks{|\Meta{注釈}|}|
+  & \mergecol{3}{著者名に脚注（主に所属機関）を付ける} \\
+|\title{|\Meta{タイトル}|}| & 文書のタイトル & |\date{|\Meta{日付}|}| & 文書の作成日 \\
+\end{entable}
+
+本文中 |\maketitle| を記述すると上記の情報を基に表題が出力される．
+
+\subsection{ページスタイル}
+
+\begin{entable}[\enspace\qquad]{2}{2}
+|empty| & 空のヘッダ・フッタ & |plain| & ノンブル（ページ番号） \\
+|headings| & 柱とノンブル & |myheadings| & カスタムの柱
+\end{entable}
+
+|\pagestyle{|\Meta{スタイル}|}| の形式で指定．この命令は本文中でも利用可能．
+|\thispagestyle{|\Meta{スタイル}|}| により一時的な変更もできる．|myheadings| 指定時
+は |\markboth{|\Meta{偶数ページ用}|}{|\Meta{奇数ページ用}|}| で柱を設定．
+
+\subsection{各種設定など}
+
+\begin{entable}{2}{1}
+|\usepackage[|\Meta{オプション}|]{|\Meta{パッケージ}|}| & パッケージ読み込み \\
+|\setcounter{|\Meta{カウンタ}|}{|\Meta{数値}|}| & カウンタの値を設定 \\
+|\setlength{|\Meta{寸法を表す命令}|}{|\Meta{長さ}|}| & 寸法を設定 \\
+|\newcommand{|\Meta{命令}|}[|\Meta{引数の数}|]{|\Meta{定義}|}| & マクロの定義 \\
+%|\newenvironment{|\Meta{環境名}|}{|\Meta{開始}|}{|\Meta{終了}|}| & 環境の定義 \\
+\end{entable}
+
+|\usepackage| はプリアンブルのみで利用可．他の命令は中級者以上向け．
+
+\section{文書の論理構造}
+
+%\subsection{見出し}
+
+\begin{entable}[\enspace\quad]{2}{3}
+|\part| & 部 & |\chapter| & 章 & |\section| & 節 \\
+|\subsection| & 小節 & |\subsubsection| & 小々節 & |\paragraph| & 段落 \\
+|\subparagraph| & 小段落 \\
+\end{entable}
+
+これらの命令は共通の書式をもつ：\Meta{命令}|[|\Meta{目次用の見出し}|]{|\Meta{見出し}|}|．
+\Meta{命令}の直後に `|*|' を付けた場合，見出し番号が付かず目次にも載らない．
+
+\subsection{箇条書き}
+
+\begin{entable}[\enspace\qquad]{2}{2}
+|\begin{itemize}| & 記号付き & |\begin{enumerate}| & 連番付き \\
+|\begin{description}| & 見出し付き \\
+\end{entable}
+
+各項目は上記の環境中で |\item |\Meta{テキスト} で表現．|\item[|\Meta{ラベル}|]|\break
+のようにすると当該項目のラベルのみを変更（description環境では必須）．
+
+\subsection{フロート}
+
+\begin{entable}[\enspace\quad]{2}{2}
+|\begin{figure}[|\Meta{位置}|]| & 図を配置 & |\begin{table}[|\Meta{位置}|]| & 表を配置 \\
+\end{entable}
+
+各環境中 |\caption[|\Meta{図表目次用}|]{|\Meta{説明文}|}| でキャプションを付けられる．
+\Meta{位置}は次の文字の組み合わせで指定：$\mboxtt{t}=\mbox{ページ上部}$，
+$\mboxtt{b}=\mbox{ページ下部}$，$\mboxtt{p}=\mbox{独立ページ}$，$\mboxtt{h}=\mbox{その場}$，
+$\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
+
+\subsection{引用と注釈}
+
+\begin{entable}[\enspace\qquad]{2}{2}
+|\begin{quote}| & 短い引用 & |\begin{quotation}| & 複数段落の引用 \\
+\mergecol{2}{\texttt{\bs footnote[}\Meta{番号}\texttt{]\{}\Meta{脚注}\texttt{\}}}
+  & \mergecol{2}{\texttt{\bs marginpar\{}\Meta{傍注}\texttt{\}}} \\
+\end{entable}
+
+%|\footnote| が使えない場面もある．その場合 |\footnotemark[|\Meta{番号}|]| で
+%記号を付け，後から |\footnotetext[|\Meta{番号}|]{|\Meta{脚注}|}| でテキストを与える．
+
+\section{テキストプロパティ}
+
+\subsection{書体}
+
+\begin{entable}[\enspace]{3}{1}
+|\textmc{|\Meta{テキスト}|}| & |{\mcfamily |\Meta{テキスト}|}| & \textmc{明朝体} \\
+|\textgt{|\Meta{テキスト}|}| & |{\gtfamily |\Meta{テキスト}|}| & \textgt{ゴシック体} \\
+|\textrm{|\Meta{テキスト}|}| & |{\rmfamily |\Meta{テキスト}|}| & \textrm{Roman family} \\
+|\textsf{|\Meta{テキスト}|}| & |{\sffamily |\Meta{テキスト}|}| & \textsf{Sans serif family} \\
+|\texttt{|\Meta{テキスト}|}| & |{\ttfamily |\Meta{テキスト}|}| & \texttt{Typewriter family} \\
+|\textmd{|\Meta{テキスト}|}| & |{\mdseries |\Meta{テキスト}|}| & \textmd{Medium series} \\
+|\textbf{|\Meta{テキスト}|}| & |{\bfseries |\Meta{テキスト}|}| & \textbf{Bold series} \\
+|\textup{|\Meta{テキスト}|}| & |{\upshape |\Meta{テキスト}|}| & \textup{Upright shape} \\
+|\textit{|\Meta{テキスト}|}| & |{\itshape |\Meta{テキスト}|}| & \textit{Italic shape} \\
+|\textsl{|\Meta{テキスト}|}| & |{\slshape |\Meta{テキスト}|}| & \textsl{Slanted shape} \\
+|\textsc{|\Meta{テキスト}|}| & |{\scshape |\Meta{テキスト}|}| & \textsc{Small Caps shape} \\
+\end{entable}
+
+|\textnormal{|\Meta{テキスト}|}|, |\normalfont| を用いるとファミリ・シリーズ・シェイプを
+同時にデフォルト設定へ戻すことができる．
+
+\subsection{装飾}
+
+\begin{entable}[\enspace]{3}{1}
+|\emph{|\Meta{テキスト}|}| & |{\em |\Meta{テキスト}|}| & \emph{強調}（効果は環境依存） \\
+|\underline{|\Meta{テキスト}|}| & & \underline{下線} \\
+\end{entable}
+
+\subsection{フォントサイズ}
+
+\bgroup
+\setlength{\columnsep}{14pt}
+\begin{multicols}{2}
+\begin{tabbing}
+|\footnotesize| \= \kill
+|\tiny| \> {\tiny 極小} \\
+|\scriptsize| \> {\scriptsize スクリプトサイズ} \\
+|\footnotesize| \> {\footnotesize 脚注サイズ} \\
+|\small| \> {\small 小さい} \\
+|\normalsize| \> {\normalsize 標準サイズ} \\
+|\large| \> {\large 大きい} \\
+|\Large| \= {\Large 超大きい} \\
+|\LARGE| \> {\LARGE 超々大きい} \\
+|\huge| \> {\huge 巨大} \\
+|\Huge| \> {\Huge 超巨大} %\\
+\end{tabbing}
+\end{multicols}
+\egroup
+
+|\fontsize{|\Meta{サイズ}|}{|\Meta{行送り}|}\selectfont| で寸法による指定も可能．
+これらの命令は通常 |{|\Meta{命令}| |\Meta{テキスト}|}| の形で使用．
+
+\subsection{入力通りに出力}
+
+\begin{entable}[\enspace]{2}{1}
+|\verb!|\Meta{テキスト}|!| & デリミタ（ここでは `\texttt{!}'）間の内容をそのまま出力 \\
+|\begin{verbatim}| & 入力通りに出力される環境 \\
+\end{entable}
+
+|\verb*| や |\begin{verbatim*}| を用いると空白が `\verb*! !' で明示される．
+
+\subsection{配置}
+
+\begin{entable}[\qquad]{3}{1}
+|\begin{center}| & |\centering| & 中央寄せ \\
+|\begin{flushleft}| & |\raggedright| & 左寄せ \\
+|\begin{flushright}| & |\raggedleft| & 右寄せ \\
+\end{entable}
+
+\section{空白・行・ページ}
+
+\subsection{水平スペース（文字送り方向）}
+
+\begin{entable}[\enspace\quad]{2}{4}
+\verb*!\ ! & 空白 & |\enspace| & \SI{0.5}{em} & |\quad| & \SI{1}{em} & |\,|
+  & \SI{1/6}{em}程度 \\
+|~| & 改行禁止 & \mergecol{2}{\texttt{\bs hspace\{}\Meta{長さ}\texttt{\}}}
+  & |\qquad| & \SI{2}{em} \\
+\end{entable}
+
+|\hfill| は無限に伸びる空白．英大文字で終わる文のピリオド直前に置く |\@| や
+イタリック補正の |\/| もスペーシングに影響．
+
+\subsection{垂直スペース（行送り方向）}
+
+\begin{entable}[\quad]{6}{1}
+|\smallskip| & |\medskip| & |\bigskip| & |\vspace{|\Meta{長さ}|}| & |\vfill| \\
+\end{entable}
+
+|\phantom{|\Meta{文字列}|}| を用いると\Meta{文字列}と縦横同じ寸法の空白を作る．
+
+\subsection{行とページ}
+
+\begin{entable}[\enspace]{2}{2}
+|\par| & 改段落（空行と同じ） & |\noindent| & 行のインデントなし \\
+|\\*| & 改行（改ページ禁止） & |\\[|\Meta{長さ}|]| & 改行（＋垂直スペース） \\
+|\linebreak| & 行分割を促進 & |\pagebreak| & ページ分割を促進 \\
+|\newpage| & 改ページ（段移動） & |\clearpage| & 全図表出力＋改ページ \\
+\end{entable}
+
+\section{記号・その他}
+
+%一部の命令は後述する数式モード内でも利用できる．
+
+\subsection{特殊記号}
+
+\begin{entable}[\thinspace\quad]{2}{4}
+\& & |\&| & \dag & |\dag| & \textasciitilde & |\textasciitilde| & \textbackslash & |\textbackslash| \\
+\% & |\%| & \ddag & |\ddag| & \textasciicircum & |\textasciicircum| & \textbar & |\textbar| \\
+\# & |\#| & \dots & |\dots| & \texttrademark & |\texttrademark| & \textbardbl & |\textbardbl| \\
+\_ & |\_| & \copyright & |\copyright| & \textregistered & |\textregistered| & \textbullet & |\textbullet| \\
+\$ & |\$| & \pounds & |\pounds| & \textordfeminine & |\textordfeminine| & \textless & |\textless| \\
+\P & |\P| & \S & |\S| & \textordmasculine & |\textordmasculine| & \textgreater & |\textgreater| \\
+\end{entable}
+
+\subsection{括弧類}
+
+\begin{entable}{2}{6}
+` ' & \verb*!` '! & `` '' & \verb*!`` ''! & \{ \} & \verb*!\{ \}!
+  & [ ] & \verb*![ ]! & ( ) & \verb*!( )! \\
+\end{entable}
+
+\subsection{ダッシュ類}
+
+\begin{entable}[\qquad]{4}{1}
+ハイフン & |-| & X-ray & 単語内，2単語の連結 \\
+en-dash & |--| & 1--5 & 範囲を表す場合など \\
+em-dash & |---| & Yes---or no? & 挿入句の導入など \\
+\end{entable}
+
+\subsection{アクセント類}
+
+\begin{entable}[\enspace\qquad]{2}{6}
+!` & |!`| & ?` & |?`| & \.a & |\.a| & \'a & |\'a| & \"a & |\"a| & \`a & |\`a| \\
+\^a & |\^a| & \=a & |\=a| & \~a & |\~a| & \aa & |\aa| & \AA & |\AA| & \ae & |\ae| \\
+\AE & |\AE| & \b a & |\b a| & \c c & |\c c| & \d a & |\d a| & \H a & |\H a| & \i & |\i| \\
+\j & |\j| & \l & |\l| & \L & |\L| & \o & |\o| & \O & |\O| & \oe & |\oe| \\
+\OE & |\OE| & \r a & |\r a| & \ss & |\ss| & \t oo & |\t oo| & \u a & |\u a| & \v a & |\v a| \\
+\end{entable}
+
+\subsection{その他}
+
+\begin{entable}{2}{1}
+|\today| & 現在の日付（|\西暦|, |\和暦| で形式を変更可能） \\
+|\TeX|/|\LaTeX|/|\LaTeXe| & \TeX/\LaTeX/\LaTeXe（ロゴ） \\
+\end{entable}
+
+\section{表組み}
+
+\subsection{tabular環境}
+
+\begin{entable}{1}{2}
+|\begin{tabular}{|\Meta{列指定}|}| & |\begin{tabular*}{|\Meta{幅}|}{|\Meta{列指定}|}| \\
+\end{entable}
+
+\Meta{列指定}は次の文字を並べて指定：$\mboxtt{l}=\mbox{左寄せの列}$，
+$\mboxtt{c}=\mbox{中央寄せの列}$，$\mboxtt{r}=\mbox{右寄せの列}$，
+$\mboxtt{p\{\Meta{幅}\}}=\mbox{寸法指定の列}$，
+$\mboxtt{@\{\Meta{区切り}\}}=\mbox{列間の区切り}$，
+$\mboxtt{*\{\Meta{回数}\}\{\Meta{データ}\}}=\mbox{繰り返し}$，
+$\mboxtt{\vbar}=\mbox{表全体の縦罫線}$．
+
+%\subsubsection{要素}
+
+\begin{entable}{2}{2}
+|&| & 列の区切り & |\hline| & 表全体の横罫線 \\
+|\\| & 行の終端 & |\cline{|\Meta{開始}|-|\Meta{終了}|}| & 範囲指定の横罫線 \\
+\end{entable}
+
+セルの結合：|\multicolumn{|\Meta{列数}|}{|\Meta{列指定}|}{|\Meta{テキスト}|}|．
+
+\subsection{tabbing環境}
+
+\begin{entable}{2}{2}
+|\=| & タブ位置を設定 & |\>| & 次のタブ位置に移動 \\
+|\\| & 行の終端 & |\kill| & 非表示行（タブ位置設定）の終端 \\
+\end{entable}
+
+\section{数式モード}
+
+\begin{entable}{2}{2}
+|$|\Meta{数式}|$| & インライン数式 & |\begin{equation}| & 別行立て数式 \\
+|\[|\Meta{数式}|\]| & \mergecol{3}{別行立て数式（式番号なし）} \\
+\end{entable}
+
+\subsection{数式の基本}
+
+\begin{entable}[\enspace\quad]{2}{5}
+$p'=0$ & |p'=0| & $a_1$ & |a_1| & $x^{2}$ & |x^2| & $\frac{3}{4}$ & |\frac{3}{4}|
+  & $\sqrt[5]{6}$ & |\sqrt[5]{6}| \\
+\mergecol{10}{\texttt{\bs begin\{array\}\{\Meta{列指定}\}}\enspace 行列用の表} \\
+\end{entable}
+
+数式モードではテキスト中で使える水平スペース命令のほかに以下が使える．
+
+\begin{entable}{2}{3}
+|\:| & \SI{4/18}{em}程度 & |\;| & \SI{5/18}{em}程度 & |\!| & \SI{-3/18}{em}程度 \\
+\end{entable}
+
+\subsection{スタイルと書体}
+
+\begin{entable}[\enspace\quad]{2}{2}
+|\displaystyle| & 別行立てスタイル & |\textstyle| & インラインスタイル \\
+\end{entable}
+
+書体の変更には |\mathrm|, |\mathbf|, |\mathit|,
+|\mathsf|, |\mathtt|, |\mathmc|, |\mathgt| および |\mathnormal| を用いる（組み合わせは不可）．
+英大文字に対してのみカリグラフ体への変更命令 |\mathcal| が利用できる（例：$\mathcal{ABC}$）．
+
+\subsection{上下の装飾}
+
+\begin{entable}[\enspace\quad]{2}{3}
+$\overline{ab}$ & |\overline{ab}| & $\overrightarrow{ab}$ & |\overrightarrow{ab}|
+  & $\widehat{ab}$ & |\widehat{ab}| \\
+$\underline{ab}$ & |\underline{ab}| & $\overleftarrow{ab}$ & |\overleftarrow{ab}|
+  & $\widetilde{ab}$ & |\widetilde{ab}| \\[2pt]
+\mergecol{6}{%
+  $\overbrace{a+b}$\enspace \texttt{\bs overbrace\{a+b\}}\quad
+  $\underbrace{a+b}$\enspace \texttt{\bs underbrace\{a+b\}}} \\
+\end{entable}
+
+\subsection{ギリシャ文字}
+
+\begin{entable}[\enspace\quad]{2}{6}
+$\alpha$ & |\alpha| & $\beta$ & |\beta| & $\gamma$ & |\gamma| & $\delta$ & |\delta| & $\epsilon$ & |\epsilon| \\
+$\zeta$ & |\zeta| & $\eta$ & |\eta| & $\theta$ & |\theta| & $\iota$ & |\iota| & $\kappa$ & |\kappa| \\
+$\lambda$ & |\lambda| & $\mu$ & |\mu| & $\nu$ & |\nu| & $\xi$ & |\xi| & $\pi$ & |\pi| \\
+$\rho$ & |\rho| & $\sigma$ & |\sigma| & $\tau$ & |\tau| & $\upsilon$ & |\upsilon| & $\phi$ & |\phi| \\
+$\chi$ & |\chi| & $\omega$ & |\omega| & $\Gamma$ & |\Gamma| & $\Delta$ & |\Delta| & $\Theta$ & |\Theta| \\
+$\Lambda$ & |\Lambda| & $\Xi$ & |\Xi| & $\Pi$ & |\Pi| & $\Sigma$ & |\Sigma| & $\Upsilon$ & |\Upsilon| \\
+$\Phi$ & |\Phi| & $\Psi$ & |\Psi| & $\Omega$ & |\Omega| & $\varpi$ & |\varpi| & $\varphi$ & |\varphi| \\
+$\varepsilon$ & \mergecol{3}{\texttt{\bs varepsilon}}
+  & $\vartheta$ & \mergecol{3}{\texttt{\bs vartheta}} & $\varsigma$ & |\varsigma| \\
+\end{entable}
+
+\subsection{二項演算子}
+
+\begin{entable}[\enspace\quad]{2}{4}
+$\times$ & |\times| & $\div$ & |\div| & $\vee$ & |\vee| & $\triangleright$ & |\triangleright| \\
+$\cdot$ & |\cdot| & $\mp$ & |\mp| & $\wedge$ & |\wedge| & $\bigtriangleup$ & |\bigtriangleup| \\
+$\ast$ & |\ast| & $\pm$ & |\pm| & $\uplus$ & |\uplus| & $\bigtriangledown$ & |\bigtriangledown| \\
+$\star$ & |\star| & $\cap$ & |\cap| & $\sqcap$ & |\sqcap| & $\triangleleft$ & |\triangleleft| \\
+$\setminus$ & |\setminus| & $\cup$ & |\cup| & $\sqcup$ & |\sqcup| & $\dagger$ & |\dagger| \\
+$\oslash$ & |\oslash| & $\odot$ & |\odot| & $\bullet$ & |\bullet| & $\ddagger$ & |\ddagger| \\
+$\otimes$ & |\otimes| & $\oplus$ & |\oplus| & $\circ$ & |\circ| & $\bigcirc$ & |\bigcirc| \\
+$\ominus$ & |\ominus| & $\wr$ & |\wr| & $\amalg$ & |\amalg| & & |\mathbin{|\Meta{記号}|}| \\
+\end{entable}
+
+\subsection{関係演算子}
+
+\begin{entable}[\enspace\quad]{2}{5}
+$\neq$ & |\neq| & $\supset$ & |\supset| & $\perp$ & |\perp| & $\parallel$ & |\parallel| & $\mid$ & |\mid| \\
+$\leq$ & |\leq| & $\subset$ & |\subset| & $\equiv$ & |\equiv| & $\doteq$ & |\doteq| & $\asymp$ & |\asymp| \\
+$\geq$ & |\geq| & $\supseteq$ & |\supseteq| & $\sim$ & |\sim| & $\simeq$ & |\simeq| & $\models$ & |\models| \\
+$\gg$ & |\gg| & $\subseteq$ & |\subseteq| & $\cong$ & |\cong| & $\approx$ & |\approx| & $\propto$ & |\propto| \\
+$\ll$ & |\ll| & $\sqsubseteq$ & |\sqsubseteq| & $\succ$ & |\succ| & $\succeq$ & |\succeq| & $\dashv$ & |\dashv| \\
+$\in$ & |\in| & $\sqsupseteq$ & |\sqsupseteq| & $\prec$ & |\prec| & $\preceq$ & |\preceq| & $\vdash$ & |\vdash| \\
+$\ni$ & |\ni| & $\bowtie$ & |\bowtie| & $\not$ & |\not| &
+  & \mergecol{3}{\texttt{\bs mathrel\{}\Meta{記号}\texttt{\}}} \\
+\end{entable}
+
+関係演算子の前に |\not| を前置すると，その否定形を作ることができる．
+
+\subsection{大型演算子}
+
+\begin{entable}[\enspace\quad]{2}{4}
+$\int$ & |\int| & $\bigotimes$ & |\bigotimes| & $\bigcap$ & |\bigcap| & $\bigcup$ & |\bigcup| \\[3pt]
+$\oint$ & |\oint| & $\bigoplus$ & |\bigoplus| & $\biguplus$ & |\biguplus| & $\bigsqcup$ & |\bigsqcup| \\[3pt]
+$\sum$ & |\sum| & $\bigodot$ & |\bigodot| & $\bigvee$ & |\bigvee| & $\bigwedge$ & |\bigwedge| \\[3pt]
+$\prod$ & |\prod| & $\coprod$ & |\coprod| & $\smallint$ & |\smallint| & & |\mathop{|\Meta{記号}|}| \\
+\end{entable}
+
+\subsection{括弧類}
+
+\begin{entable}[\enspace\quad]{2}{6}
+$\langle$ & |\langle| & $\lceil$ & |\lceil| & $\lfloor$ & |\lfloor| 
+& \scalebox{.5}{$\big\lgroup$} & |\lgroup| & \scalebox{.5}{$\big\lmoustache$} & |\lmoustache| \\
+$\rangle$ & |\rangle| & $\rceil$ & |\rceil| & $\rfloor$ & |\rfloor| 
+& \scalebox{.5}{$\big\rgroup$} & |\rgroup| & \scalebox{.5}{$\big\rmoustache$} & |\rmoustache| \\
+\mergecol{2}{$\vbar$ \texttt{\vbar} \quad $\|$ \texttt{\bs\vbar}} &
+  & \mergecol{3}{\texttt{\bs mathopen\{}\Meta{記号}\texttt{\}}} &
+  & \mergecol{3}{\texttt{\bs mathclose\{}\Meta{記号}\texttt{\}}} \\
+\end{entable}
+
+|\left|\Meta{開き括弧}\Meta{数式}|\right|\Meta{閉じ括弧} で括弧類のサイズを自動調整．
+
+\subsection{矢印類}
+
+\begin{entable}[\thinspace\enspace]{2}{3}
+$\to$ & |\to| & $\hookrightarrow$ & |\hookrightarrow| & $\Uparrow$ & |\Uparrow| \\
+$\gets$ & |\gets| & $\hookleftarrow$ & |\hookleftarrow| & $\Downarrow$ & |\Downarrow| \\
+$\nearrow$ & |\nearrow| & $\leftrightarrow$ & |\leftrightarrow| & $\rightleftharpoons$ & |\rightleftharpoons| \\
+$\searrow$ & |\searrow| & $\rightharpoonup$ & |\rightharpoonup| & $\longrightarrow$ & |\longrightarrow| \\
+$\nwarrow$ & |\nwarrow| & $\rightharpoondown$ & |\rightharpoondown| & $\Longrightarrow$ & |\Longrightarrow| \\
+$\swarrow$ & |\swarrow| & $\leftharpoonup$ & |\leftharpoonup| & $\longleftarrow$ & |\longleftarrow| \\
+$\mapsto$ & |\mapsto| & $\leftharpoondown$ & |\leftharpoondown| & $\Longleftarrow$ & |\Longleftarrow| \\
+$\longmapsto$ & |\longmapsto| & $\Leftrightarrow$ & |\Leftrightarrow| & $\longleftrightarrow$ & |\longleftrightarrow| \\
+$\Rightarrow$ & |\Rightarrow| & $\updownarrow$ & |\updownarrow| & $\Longleftrightarrow$ & |\Longleftrightarrow| \\
+$\Leftarrow$ & |\Leftarrow| & $\downarrow$ & |\downarrow| & & |\iff|（前後の空白大） \\
+$\uparrow$ & |\uparrow| & $\Updownarrow$ & |\Updownarrow| \\
+\end{entable}
+
+\subsection{関数名}
+
+\begin{entable}[\quad\quad]{1}{8}
+|\log| & |\sin| & |\arcsin| & |\sinh| & |\max| & |\arg| & |\exp| & |\ker| \\
+|\lg| & |\cos| & |\arccos| & |\cosh| & |\min| & |\lim| & |\Pr| & |\dim| \\
+|\ln| & |\tan| & |\arctan| & |\tanh| & |\sup| & |\limsup| & |\gcd| & |\hom| \\
+|\sec| & |\csc| & |\cot| & |\coth| & |\inf| & |\liminf| & |\deg| & |\det| \\
+\end{entable}
+
+\subsection{アクセント類}
+
+\begin{entable}[\enspace\qquad]{2}{4}
+$\bar{a}$ & |\bar{a}| & $\acute{a}$ & |\acute{a}| & $\dot{a}$ & |\dot{a}| & $\ddot{a}$ & |\ddot{a}| \\
+$\vec{a}$ & |\vec{a}| & $\breve{a}$ & |\breve{a}| & $\grave{a}$ & |\grave{a}| & $\mathring{a}$ & |\mathring{a}| \\
+$\hat{a}$ & |\hat{a}| & $\check{a}$ & |\check{a}| & $\tilde{a}$ & |\tilde{a}| &  &  \\
+\end{entable}
+
+\subsection{その他}
+
+\begin{entable}[\enspace\quad]{2}{4}
+$\spadesuit$ & |\spadesuit| & $\flat$ & |\flat| & $\surd$ & |\surd| & $\nabla$ & |\nabla| \\
+$\heartsuit$ & |\heartsuit| & $\natural$ & |\natural| & $\smile$ & |\smile| & $\partial$ & |\partial| \\
+$\diamondsuit$ & |\diamondsuit| & $\sharp$ & |\sharp| & $\frown$ & |\frown| & $\infty$ & |\infty| \\
+$\clubsuit$ & |\clubsuit| & $\prime$ & |\prime| & $\top$ & |\top| & $\angle$ & |\angle| \\
+$\diamond$ & |\diamond| & $\Re$ & |\Re| & $\bot$ & |\bot| & $\triangle$ & |\triangle| \\
+$\backslash$ & |\backslash| & $\Im$ & |\Im| & $\forall$ & |\forall| & $\exists$ & |\exists| \\
+$\aleph$ & |\aleph| & $\hbar$ & |\hbar| & $\neg$ & |\neg| & $\emptyset$ & |\emptyset| \\
+$\ell$ & |\ell| & $\wp$ & |\wp| & $\imath$ & |\imath| & $\jmath$ & |\jmath| \\[-6pt]
+$\cdots$ & |\cdots| & $\ldots$ & |\ldots| & \raisebox{-2pt}{$\vdots$} & |\vdots| & \raisebox{-2pt}{$\ddots$} & |\ddots| \\
+\end{entable}
+
+\section{相互参照・目次・索引・文献リスト}
+
+これらの機能を利用するには一般に |platex| を複数回実行する必要がある．
+
+\subsection{相互参照}
+
+\begin{entable}{2}{1}
+|\label{|\Meta{ラベル}|}| & 相互参照用のラベルをセット \\
+|\ref{|\Meta{ラベル}|}| & ラベル位置（章や図表，式番号など）を出力 \\
+|\pageref{|\Meta{ラベル}|}| & ラベル位置のページ番号を出力 \\
+\end{entable}
+
+\subsection{目次}
+
+\begin{entable}[\enspace\qquad]{3}{2}
+|toc| & |\tableofcontents|
+  & \mergecol{4}{目次（|tocdepth| カウンタで掲載項目を調整）} \\
+|lof| & |\listoffigures| & 図目次 & |lot| & |\listoftables| & 表目次 \\
+\end{entable}
+
+項目の追加：|\addcontentsline{|\Meta{目次の種類}|}{|\Meta{項目の種類}|}{|\Meta{項目}|}|．
+
+\subsection{索引}
+
+\begin{entable}{2}{1}
+|\index{|\Meta{上位項目}|!|\Meta{読み}|@|\Meta{項目}\texttt{\vbar}\Meta{体裁}|}|
+  & 索引項目の追加 \\
+\end{entable}
+
+indファイルは |mendex| で処理．索引の出力には別途パッケージが必要．
+
+\subsection{文献リスト}
+
+\begin{entable}{2}{1}
+|\cite[|\Meta{コメント}|]{|\Meta{キー}|,|\Meta{キー}|,|\dots|}| & 対応する文献を引用 \\
+|\begin{thebibliography}{|\Meta{最大ラベル}|}| & 文献リスト用の箇条書き \\
+|\bibitem[|\Meta{ラベル}|]{|\Meta{キー}|} |\Meta{テキスト} & 文献項目の記述 \\
+\end{entable}
+
+|pbibtex| を用いて文献リストをデータベースから自動生成する方法もある．
+
+%\section{p\LaTeX 文書のサンプル}
+%
+%\lstinputlisting{platexsheet-sample.tex}
+
+\rule{.3\linewidth}{.25pt}
+\scriptsize
+
+\LaTeXe 版 {\copyright} 2006 Winston Chang \\
+\url{http://www.stdout.org/~winston/latex/}
+
+p\LaTeXe 版 {\copyright} 2017 Takuto Asakura \\
+\url{https://wtsnjp.com/pdf/platexsheet.pdf}
+
+バージョン：2.0, 作成日：2017/01/07
+
+\end{multicols}
+\end{document}
