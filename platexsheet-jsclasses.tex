@@ -1,9 +1,9 @@
 % typeset: ptex2pdf -l platexsheet-jsclasses.tex
-\documentclass[9pt,a4paper,landscape,dvipdfmx,draft]{jsarticle}
+\documentclass[9pt,a4paper,landscape,dvipdfmx]{jsarticle}
 
 % 使用パッケージ
 \usepackage[small]{titlesec}
-\usepackage[final]{plistings}
+\usepackage{plistings}
 \usepackage{geometry}
 \usepackage{graphicx}
 \usepackage{multicol}
@@ -20,8 +20,8 @@
 
 %% 見出し
 \setcounter{secnumdepth}{0}
-\titlespacing{\section}{0pt}{5pt}{0pt}
-\titlespacing{\subsection}{0pt}{0pt}{0pt}
+\titlespacing{\section}{0pt}{1pt}{-1pt}
+\titlespacing{\subsection}{0pt}{0pt}{-1pt}
 \titlespacing{\subsubsection}{0pt}{0pt}{0pt}
 
 %% 寸法
@@ -61,10 +61,10 @@
 
 % 三段組を開始
 \begin{multicols}{3}
-\setlength{\premulticols}{1pt}
-\setlength{\postmulticols}{1pt}
-\setlength{\multicolsep}{1pt}
-\setlength{\columnsep}{2pt}
+\setlength{\premulticols}{0pt}
+\setlength{\postmulticols}{0pt}
+\setlength{\multicolsep}{0pt}
+\setlength{\columnsep}{0pt}
 
 % 文字サイズ
 \footnotesize
@@ -107,10 +107,8 @@
 
 \subsection{新ドキュメントクラス}
 
-\begin{entable}{2}{2}
-|jbook| & 横書き書籍 & |tbook| & 縦書き書籍 \\
-|jarticle| & 横書き論文 & |tarticle| & 縦書き論文 \\
-|jreport| & 横書きレポート & |treport| & 縦書きレポート \\
+\begin{entable}{2}{3}
+|jsarticle| & 論文用 & |jsreport| & レポート用 & |jsbook| & 書籍用 \\
 \end{entable}
 
 クラスによってデフォルトのオプションや使える見出し命令などが異なる．
@@ -120,11 +118,13 @@
 \begin{entable}[\enspace\qquad]{2}{2}
 \mergecol{4}{%
   |a4paper|/|a5paper|/|b4paper|/|b5paper|\enspace 用紙サイズ（B系列はJIS規格）} \\
-|a4j|/|a5j|/|b4j|/|b5j| & 上記より余白が狭い & |landscape| & 用紙を横向き \\
-|10pt|/|11pt|/|12pt| & 文字サイズ & |twocolumn| & 二段組 \\
+\mergecol{4}{%
+  |9pt|/|10pt|/|11pt|/|12pt|/|14pt|/|17pt|/|21pt|/|25pt|/|30pt|/|36pt|\enspace 文字サイズ}\\
+|landscape| & 用紙を横向き & |twocolumn| & 二段組 \\
 |titlepage| & タイトルを独立ページ & |twoside| & 両面印刷 \\
 |leqno| & 数式番号を左側に表示 & |dvipdfmx| & dviドライバ \\
 |fleqn| & 別行立て数式を左寄せ & |tombo| & トンボを表示 \\
+|papersize| & PDFも用紙サイズにする & |nomag| & |\mag|を使わない \\
 \end{entable}
 
 クラスオプションに指定したものは読み込んだパッケージへも適用される．
@@ -169,13 +169,14 @@
 %\subsection{見出し}
 
 \begin{entable}[\enspace\quad]{2}{3}
-|\part| & 部 & |\chapter| & 章 & |\section| & 節 \\
-|\subsection| & 小節 & |\subsubsection| & 小々節 & |\paragraph| & 段落 \\
-|\subparagraph| & 小段落 \\
+\mergecol{2}{%
+  \texttt{\bs part}\enspace 部\quad\texttt{\bs chapter}\enspace 章} &
+|\section| & 節 & |\subsection| & 小節 \\
+|\subsubsection| & 小々節 & |\paragraph| & 段落 & |\subparagraph| & 小段落 \\
 \end{entable}
 
 これらの命令は共通の書式をもつ：\Meta{命令}|[|\Meta{目次用の見出し}|]{|\Meta{見出し}|}|．
-\Meta{命令}の直後に `|*|' を付けた場合，見出し番号が付かず目次にも載らない．
+\linebreak\Meta{命令}の直後に `|*|' を付けた場合，見出し番号が付かず目次にも載らない．
 
 \subsection{箇条書き}
 
@@ -240,7 +241,7 @@ $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 \subsection{フォントサイズ}
 
 \bgroup
-\setlength{\columnsep}{14pt}
+\setlength{\columnsep}{-20pt}
 \begin{multicols}{2}
 \begin{tabbing}
 |\footnotesize| \= \kill
@@ -250,13 +251,16 @@ $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 |\small| \> {\small 小さい} \\
 |\normalsize| \> {\normalsize 標準サイズ} \\
 |\large| \> {\large 大きい} \\
-|\Large| \= {\Large 超大きい} \\
-|\LARGE| \> {\LARGE 超々大きい} \\
+|\Large| \> {\Large 超大きい} \\
+|\LARGE| \= {\LARGE 超々大きい} \\
 |\huge| \> {\huge 巨大} \\
-|\Huge| \> {\Huge 超巨大} %\\
+|\Huge| \> {\Huge 超巨大} \\
+|\HUGE| \> {\HUGE 超々巨大} \\
 \end{tabbing}
 \end{multicols}
 \egroup
+
+\vspace{-10pt}
 
 |\fontsize{|\Meta{サイズ}|}{|\Meta{行送り}|}\selectfont| で寸法による指定も可能．
 これらの命令は通常 |{|\Meta{命令}| |\Meta{テキスト}|}| の形で使用．
@@ -583,9 +587,9 @@ indファイルは |mendex| で処理．索引の出力には別途パッケー�
 
 |pbibtex| を用いて文献リストをデータベースから自動生成する方法もある．
 
-%\section{p\LaTeX 文書のサンプル}
-%
-%\lstinputlisting{platexsheet-sample.tex}
+\section{p\LaTeX 文書のサンプル}
+
+\lstinputlisting{sample-jsclasses.tex}
 
 \rule{.3\linewidth}{.25pt}
 \scriptsize
@@ -593,10 +597,10 @@ indファイルは |mendex| で処理．索引の出力には別途パッケー�
 \LaTeXe 版 {\copyright} 2006 Winston Chang \\
 \url{http://www.stdout.org/~winston/latex/}
 
-p\LaTeXe 版 {\copyright} 2017 Takuto Asakura \\
-\url{https://wtsnjp.com/pdf/platexsheet.pdf}
+p\LaTeXe\ (jsclasses) 版 {\copyright} 2017 Takuto Asakura \\
+\url{https://wtsnjp.com/pdf/platexsheet-jsclasses.pdf}
 
-バージョン：2.0, 作成日：2017/01/07
+バージョン：3.0, 作成日：2017/11/13
 
 \end{multicols}
 \end{document}
