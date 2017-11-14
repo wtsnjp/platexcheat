@@ -33,7 +33,7 @@
 \MakeShortVerb{\|}
 \lstset{
   language={[LaTeX]TeX},
-  basicstyle={\scriptsize\ttfamily},
+  basicstyle={\scriptsize\ttfamily\gtfamily},
   commentstyle={\scriptsize\textcolor{gray}},
   keywordstyle={\scriptsize\ttfamily\bfseries},
   columns=[l]{fullflexible}}
@@ -69,9 +69,10 @@
 %% ユーザ用マクロ
 \chardef\vbar=`\| \chardef\bs=`\\
 \chardef\{=`\{ \chardef\}=`\}
-\newcommand{\cs}[1]{\eghostguarded{\texttt{\bs #1}}}
-\newcommand{\code}[1]{\eghostguarded{\texttt{#1}}}
-\newcommand{\single}[1]{\eghostguarded{`\texttt{#1}'}}
+\newcommand{\codefont}{\ttfamily\gtfamily}
+\newcommand{\cs}[1]{\eghostguarded{{\codefont \bs #1}}}
+\newcommand{\code}[1]{\eghostguarded{{\codefont #1}}}
+\newcommand{\single}[1]{\eghostguarded{`{\codefont #1}'}}
 \newcommand{\mboxtt}[1]{\mbox{\texttt{#1}}}
 \newcommand{\Meta}[1]{$\langle$\mbox{}\emph{#1}\mbox{}$\rangle$}
 
@@ -86,7 +87,7 @@
 \begin{multicols}{3}
 \setlength{\premulticols}{1pt}
 \setlength{\postmulticols}{1pt}
-\setlength{\multicolsep}{0pt}
+\setlength{\multicolsep}{1pt}
 \setlength{\columnsep}{2pt}
 
 % 文字サイズ
@@ -94,8 +95,8 @@
 
 % タイトル
 \begin{center}
-\Large
-\textsf{p\LaTeXe チートシート{\large （\,jsclasses版）}}
+\Large\sffamily\gtfamily
+p\LaTeXe チートシート{\large （\,jsclasses版）}
 \end{center}
 
 \section{p\LaTeXe の基本}
@@ -374,7 +375,7 @@ em-dash & |---| & Yes---or no? & 挿入句の導入など \\
 \subsection{その他}
 
 \begin{entable}{2}{1}
-|\today| & 現在の日付（|\西暦|, |\和暦|で形式を変更可能） \\
+|\today| & 現在の日付（{\codefont\bs 西暦}, {\codefont\bs 和暦}で形式を変更可能） \\
 |\TeX|/|\LaTeX|/|\LaTeXe| & \TeX/\LaTeX/\LaTeXe（ロゴ） \\
 \end{entable}
 
@@ -444,13 +445,11 @@ $p'=0$ & |p'=0| & $a_1$ & |a_1| & $x^{2}$ & |x^2| & $\frac{3}{4}$ & |\frac{3}{4}
 $\overline{ab}$ & |\overline{ab}| & $\overrightarrow{ab}$ & |\overrightarrow{ab}|
   & $\widehat{ab}$ & |\widehat{ab}| \\
 $\underline{ab}$ & |\underline{ab}| & $\overleftarrow{ab}$ & |\overleftarrow{ab}|
-  & $\widetilde{ab}$ & |\widetilde{ab}| \\
+  & $\widetilde{ab}$ & |\widetilde{ab}| \\[2pt]
 \mergecol{6}{%
   $\overbrace{a+b}$\enspace \texttt{\bs overbrace\{a+b\}}\quad
   $\underbrace{a+b}$\enspace \texttt{\bs underbrace\{a+b\}}} \\
 \end{entable}
-
-\vspace{-5pt}
 
 \subsection{ギリシャ文字}
 
@@ -500,7 +499,7 @@ $\ni$ & |\ni| & $\bowtie$ & |\bowtie| & $\not$ & |\not| &
 $\int$ & |\int| & $\bigotimes$ & |\bigotimes| & $\bigcap$ & |\bigcap| & $\bigcup$ & |\bigcup| \\[2pt]
 $\oint$ & |\oint| & $\bigoplus$ & |\bigoplus| & $\biguplus$ & |\biguplus| & $\bigsqcup$ & |\bigsqcup| \\[2pt]
 $\sum$ & |\sum| & $\bigodot$ & |\bigodot| & $\bigvee$ & |\bigvee| & $\bigwedge$ & |\bigwedge| \\[2pt]
-$\prod$ & |\prod| & $\coprod$ & |\coprod| & $\smallint$ & |\smallint| & & |\mathop{|\Meta{記号}|}| \\
+$\prod$ & |\prod| & $\coprod$ & |\coprod| & $\smallint$ & |\smallint| & & |\mathop{|\Meta{記号}|}| \\[2pt]
 \end{entable}
 
 \subsection{括弧類}
@@ -619,7 +618,7 @@ indファイルは\code{mendex}で処理．索引の出力には別途パッケ�
 p\LaTeXe\ (jsclasses) 版 {\copyright} 2017 Takuto Asakura \\
 \url{https://wtsnjp.com/pdf/platexsheet-jsclasses.pdf}
 
-バージョン：3.0, 作成日：2017/11/13
+バージョン：3.0, 作成日：2017/11/14
 
 \end{multicols}
 \end{document}

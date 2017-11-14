@@ -1,9 +1,9 @@
 % typeset: ptex2pdf -l platexsheet.tex
-\documentclass[10pt,a4paper,landscape,dvipdfmx]{jarticle}
+\documentclass[10pt,a4paper,landscape,dvipdfmx,draft]{jarticle}
 
 % 使用パッケージ
 \usepackage[small]{titlesec}
-\usepackage{plistings}
+\usepackage[final]{plistings}
 \usepackage{geometry}
 \usepackage{graphicx}
 \usepackage{multicol}
@@ -26,20 +26,21 @@
 
 %% 寸法
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{0pt plus 0.5ex}
+\setlength{\parskip}{0pt plus 4.5pt}
 
 %% コード
 \MakeShortVerb{\|}
 \lstset{
   language={[LaTeX]TeX},
-  basicstyle={\scriptsize\ttfamily},
+  basicstyle={\scriptsize\ttfamily\gtfamily},
   commentstyle={\scriptsize\textcolor{gray}},
   keywordstyle={\scriptsize\ttfamily\bfseries},
   columns=[l]{fullflexible}}
 
 % マクロ定義
-%% 列挙用テーブル
 \makeatletter
+
+%% 列挙用テーブル
 \def\set@etsep#1#2{\def\etcolsep{#1}\def\etitemsep{#2}}
 \newenvironment{entable}[3][\quad\qquad]{%
   \set@etsep#1\relax\relax
@@ -48,18 +49,40 @@
     *{\the\numexpr#2-1}{l@{\etcolsep}}l@{}}}{%
   \end{tabular}}
 \newcommand{\mergecol}[2]{\multicolumn{#1}{@{}l@{}}{#2}}
-\makeatother
+
+%% PXghost <https://gist.github.com/zr-tex8r/4461060>
+%%% use an arbitrary font available in T1 encoding
+\font\pxqgg@TI=ec-lmr10 at 1.23456pt
+\chardef\pxqgg@cwm=23 % compwordmark (in T1)
+\xspcode\pxqgg@cwm=3 % allow xkanjiskip around
+%%%%<*> \eghostguarded{<text>}
+\newcommand*\eghostguarded{%
+  \ifmmode \expandafter\@firstofone
+  \else \expandafter\pxqgg@eghostguarded@a
+  \fi}
+\def\pxqgg@eghostguarded@a#1{%
+  {\pxqgg@TI\pxqgg@cwm}%
+  #1%
+  {\pxqgg@TI\pxqgg@cwm}}
 
 %% ユーザ用マクロ
 \chardef\vbar=`\| \chardef\bs=`\\
+\chardef\{=`\{ \chardef\}=`\}
+\newcommand{\codefont}{\ttfamily\gtfamily}
+\newcommand{\cs}[1]{\eghostguarded{{\codefont \bs #1}}}
+\newcommand{\code}[1]{\eghostguarded{{\codefont #1}}}
+\newcommand{\single}[1]{\eghostguarded{`{\codefont #1}'}}
 \newcommand{\mboxtt}[1]{\mbox{\texttt{#1}}}
 \newcommand{\Meta}[1]{$\langle$\mbox{}\emph{#1}\mbox{}$\rangle$}
+
+\makeatother
 
 % -----------------------------------------------------------------------
 
 \begin{document}
 
 % 三段組を開始
+\setlength{\columnsep}{10pt}
 \begin{multicols}{3}
 \setlength{\premulticols}{1pt}
 \setlength{\postmulticols}{1pt}
@@ -71,16 +94,17 @@
 
 % タイトル
 \begin{center}
-\Large
-\textbf{p\LaTeXe チートシート}
+\Large\sffamily\gtfamily
+p\LaTeXe チートシート
 \end{center}
 
 \section{p\LaTeXe の基本}
 
 \begin{entable}{2}{1}
-\emph{命令} & `\texttt{\bs}' で始まる．必須の引数は |{}|，省略可能な引数は |[]| で囲う \\
-\emph{環境} & |\begin{|\Meta{環境名}|}| と |\end{|\Meta{環境名}|}| に挟まれた部分 \\
-\emph{コメント} & `|%|' 以降は行末までコメントとして扱われる（無視される） \\
+\emph{命令} & \single{\bs}で始まる．
+  必須の引数は\code{\{\}}，省略可能な引数は\code{[]}で囲う \\
+\emph{環境} & \cs{begin\{\Meta{環境名}\}}と\cs{end\{\Meta{環境名}\}}に挟まれた部分 \\
+\emph{コメント} & \single{\%}以降は行末までコメントとして扱われる（無視される） \\
 \end{entable}
 
 すべてではないが，多くの命令や環境は入れ子にすることが可能．
@@ -95,14 +119,14 @@
       ポイント（$\SI{72.27}{pt}=\SI{72}{bp}=\SI{1}{in},\;\SI{65536}{sp}=\SI{1}{pt}$）} \\
 |Q|/|H|
   & \mergecol{3}{級と歯（$\SI{1}{Q}=\SI{1}{H}=\SI{0.25}{mm}$）} \\
-|em|/|ex|\phantom{/|pt|} & |M| の幅と |x| の高さ & |zw|/|zh| & 和文文字の幅と高さ \\
+|em|/|ex|\phantom{/|pt|} & Mの幅とxの高さ & |zw|/|zh| & 和文文字の幅と高さ \\
 \end{entable}
 
 \section{プリアンブル}
 
 文書はクラス宣言で開始：
-|\documentclass[|\Meta{オプション}|]{|\Meta{クラス}|}|．\break
-本文はdocument環境に書く．|\documentclass| と |\begin{document}| の間は
+\code{\cs{documentclass}[\Meta{オプション}]\{\Meta{クラス}\}}．\\
+本文はdocument環境に書く．\cs{documentclass}と\code{\cs{begin}\{document\}}の間は
 \emph{プリアンブル}と呼ばれ，文書全体に適用する設定などを記述する．
 
 \subsection{標準クラス}
@@ -133,13 +157,13 @@
 
 \begin{entable}[\enspace\quad]{2}{2}
 |\author{|\Meta{著者}|}|
-  & \mergecol{3}{文書の著者．複数のときは \texttt{\bs and} で区切る} \\
+  & \mergecol{3}{文書の著者．複数のときは \cs{and}で区切る} \\
 |\thanks{|\Meta{注釈}|}|
   & \mergecol{3}{著者名に脚注（主に所属機関）を付ける} \\
 |\title{|\Meta{タイトル}|}| & 文書のタイトル & |\date{|\Meta{日付}|}| & 文書の作成日 \\
 \end{entable}
 
-本文中 |\maketitle| を記述すると上記の情報を基に表題が出力される．
+本文中\cs{maketitle}を記述すると上記の情報を基に表題が出力される．
 
 \subsection{ページスタイル}
 
@@ -148,9 +172,10 @@
 |headings| & 柱とノンブル & |myheadings| & カスタムの柱
 \end{entable}
 
-|\pagestyle{|\Meta{スタイル}|}| の形式で指定．この命令は本文中でも利用可能．
-|\thispagestyle{|\Meta{スタイル}|}| により一時的な変更もできる．|myheadings| 指定時
-は |\markboth{|\Meta{偶数ページ用}|}{|\Meta{奇数ページ用}|}| で柱を設定．
+\code{\cs{pagestyle}\{\Meta{スタイル}\}}の形式で指定．この命令は本文中でも利用可能．
+\code{\cs{thispagestyle}\{\Meta{スタイル}\}}により一時的な変更もできる．
+\code{myheadings}指定時は\code{\cs{markboth}\{\Meta{偶数ページ用}\}\{\Meta{奇数ページ用}\}}で
+柱を設定．
 
 \subsection{各種設定など}
 
@@ -159,23 +184,21 @@
 |\setcounter{|\Meta{カウンタ}|}{|\Meta{数値}|}| & カウンタの値を設定 \\
 |\setlength{|\Meta{寸法を表す命令}|}{|\Meta{長さ}|}| & 寸法を設定 \\
 |\newcommand{|\Meta{命令}|}[|\Meta{引数の数}|]{|\Meta{定義}|}| & マクロの定義 \\
-%|\newenvironment{|\Meta{環境名}|}{|\Meta{開始}|}{|\Meta{終了}|}| & 環境の定義 \\
 \end{entable}
 
-|\usepackage| はプリアンブルのみで利用可．他の命令は中級者以上向け．
+\cs{usepackage}はプリアンブルのみで利用可．他の命令は中級者以上向け．
 
 \section{文書の論理構造}
 
-%\subsection{見出し}
-
 \begin{entable}[\enspace\quad]{2}{3}
-|\part| & 部 & |\chapter| & 章 & |\section| & 節 \\
-|\subsection| & 小節 & |\subsubsection| & 小々節 & |\paragraph| & 段落 \\
-|\subparagraph| & 小段落 \\
+\mergecol{2}{%
+  \texttt{\bs part}\enspace 部\quad\texttt{\bs chapter}\enspace 章} &
+|\section| & 節 & |\subsection| & 小節 \\
+|\subsubsection| & 小々節 & |\paragraph| & 段落 & |\subparagraph| & 小段落 \\
 \end{entable}
 
-これらの命令は共通の書式をもつ：\Meta{命令}|[|\Meta{目次用の見出し}|]{|\Meta{見出し}|}|．
-\Meta{命令}の直後に `|*|' を付けた場合，見出し番号が付かず目次にも載らない．
+これらの命令は共通の書式をもつ：\Meta{命令}|[|\Meta{目次用の見出し}|]{|\Meta{見出し}|}|．\\
+\Meta{命令}の直後に\single{*}を付けた場合，見出し番号が付かず目次にも載らない．
 
 \subsection{箇条書き}
 
@@ -184,8 +207,9 @@
 |\begin{description}| & 見出し付き \\
 \end{entable}
 
-各項目は上記の環境中で |\item |\Meta{テキスト} で表現．|\item[|\Meta{ラベル}|]|\break
-のようにすると当該項目のラベルのみを変更（description環境では必須）．
+各項目は上記の環境中で\code{\cs{item} \Meta{テキスト}}により表現．
+\code{\cs{item}[\Meta{ラベル}]}のようにすると当該項目のラベルのみを変更
+（description環境では必須）．
 
 \subsection{フロート}
 
@@ -193,7 +217,7 @@
 |\begin{figure}[|\Meta{位置}|]| & 図を配置 & |\begin{table}[|\Meta{位置}|]| & 表を配置 \\
 \end{entable}
 
-各環境中 |\caption[|\Meta{図表目次用}|]{|\Meta{説明文}|}| でキャプションを付けられる．
+各環境中\code{\cs{caption}[\Meta{図表目次用}]\{\Meta{説明文}\}}でキャプションを付けられる．
 \Meta{位置}は次の文字の組み合わせで指定：$\mboxtt{t}=\mbox{ページ上部}$，
 $\mboxtt{b}=\mbox{ページ下部}$，$\mboxtt{p}=\mbox{独立ページ}$，$\mboxtt{h}=\mbox{その場}$，
 $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
@@ -202,12 +226,9 @@ $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 
 \begin{entable}[\enspace\qquad]{2}{2}
 |\begin{quote}| & 短い引用 & |\begin{quotation}| & 複数段落の引用 \\
-\mergecol{2}{\texttt{\bs footnote[}\Meta{番号}\texttt{]\{}\Meta{脚注}\texttt{\}}}
-  & \mergecol{2}{\texttt{\bs marginpar\{}\Meta{傍注}\texttt{\}}} \\
+\mergecol{2}{\code{\cs{footnote}[\Meta{番号}]\{\Meta{脚注}\}}}
+  & \mergecol{2}{\code{\cs{marginpar}\{\Meta{傍注}\}}} \\
 \end{entable}
-
-%|\footnote| が使えない場面もある．その場合 |\footnotemark[|\Meta{番号}|]| で
-%記号を付け，後から |\footnotetext[|\Meta{番号}|]{|\Meta{脚注}|}| でテキストを与える．
 
 \section{テキストプロパティ}
 
@@ -227,8 +248,7 @@ $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 |\textsc{|\Meta{テキスト}|}| & |{\scshape |\Meta{テキスト}|}| & \textsc{Small Caps shape} \\
 \end{entable}
 
-|\textnormal{|\Meta{テキスト}|}|, |\normalfont| を用いるとファミリ・シリーズ・シェイプを
-同時にデフォルト設定へ戻すことができる．
+\code{\cs{textnormal}\{\Meta{テキスト}\}}や\cs{normalfont}で常にデフォルトを適用可能．
 
 \subsection{装飾}
 
@@ -258,17 +278,18 @@ $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 \end{multicols}
 \egroup
 
-|\fontsize{|\Meta{サイズ}|}{|\Meta{行送り}|}\selectfont| で寸法による指定も可能．
-これらの命令は通常 |{|\Meta{命令}| |\Meta{テキスト}|}| の形で使用．
+\code{\cs{fontsize}\{\Meta{サイズ}\}\{\Meta{行送り}\}\cs{selectfont}}で寸法による指定も可能．
+これらの命令は通常\code{\{\Meta{命令} \Meta{テキスト}\}}の形で使用．
 
 \subsection{入力通りに出力}
 
 \begin{entable}[\enspace]{2}{1}
-|\verb!|\Meta{テキスト}|!| & デリミタ（ここでは `\texttt{!}'）間の内容をそのまま出力 \\
+|\verb!|\Meta{テキスト}|!| & デリミタ（ここでは\single{!}）間の内容をそのまま出力 \\
 |\begin{verbatim}| & 入力通りに出力される環境 \\
 \end{entable}
 
-|\verb*| や |\begin{verbatim*}| を用いると空白が `\verb*! !' で明示される．
+\code{\cs{verb*}}や\code{\cs{begin}\{verbatim*\}}を用いると空白
+が\eghostguarded{}`\verb*! !'\eghostguarded{}で明示される．
 
 \subsection{配置}
 
@@ -289,8 +310,8 @@ $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
   & |\qquad| & \SI{2}{em} \\
 \end{entable}
 
-|\hfill| は無限に伸びる空白．英大文字で終わる文のピリオド直前に置く |\@| や
-イタリック補正の |\/| もスペーシングに影響．
+\cs{hfill}は無限に伸びる空白．英大文字で終わる文のピリオド直前に置く\cs{@}や
+イタリック補正の\cs{/}もスペーシングに影響．
 
 \subsection{垂直スペース（行送り方向）}
 
@@ -298,7 +319,7 @@ $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 |\smallskip| & |\medskip| & |\bigskip| & |\vspace{|\Meta{長さ}|}| & |\vfill| \\
 \end{entable}
 
-|\phantom{|\Meta{文字列}|}| を用いると\Meta{文字列}と縦横同じ寸法の空白を作る．
+\code{\cs{phantom}\{\Meta{文字列}\}}を用いると\Meta{文字列}と縦横同じ寸法の空白を作る．
 
 \subsection{行とページ}
 
@@ -310,8 +331,6 @@ $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 \end{entable}
 
 \section{記号・その他}
-
-%一部の命令は後述する数式モード内でも利用できる．
 
 \subsection{特殊記号}
 
@@ -352,7 +371,7 @@ em-dash & |---| & Yes---or no? & 挿入句の導入など \\
 \subsection{その他}
 
 \begin{entable}{2}{1}
-|\today| & 現在の日付（|\西暦|, |\和暦| で形式を変更可能） \\
+|\today| & 現在の日付（{\codefont\bs 西暦}, {\codefont\bs 和暦}で形式を変更可能） \\
 |\TeX|/|\LaTeX|/|\LaTeXe| & \TeX/\LaTeX/\LaTeXe（ロゴ） \\
 \end{entable}
 
@@ -371,14 +390,12 @@ $\mboxtt{@\{\Meta{区切り}\}}=\mbox{列間の区切り}$，
 $\mboxtt{*\{\Meta{回数}\}\{\Meta{データ}\}}=\mbox{繰り返し}$，
 $\mboxtt{\vbar}=\mbox{表全体の縦罫線}$．
 
-%\subsubsection{要素}
-
 \begin{entable}{2}{2}
 |&| & 列の区切り & |\hline| & 表全体の横罫線 \\
 |\\| & 行の終端 & |\cline{|\Meta{開始}|-|\Meta{終了}|}| & 範囲指定の横罫線 \\
 \end{entable}
 
-セルの結合：|\multicolumn{|\Meta{列数}|}{|\Meta{列指定}|}{|\Meta{テキスト}|}|．
+セルの結合：\code{\cs{multicolumn}\{\Meta{列数}\}\{\Meta{列指定}\}\{\Meta{テキスト}\}}．
 
 \subsection{tabbing環境}
 
@@ -399,7 +416,7 @@ $\mboxtt{\vbar}=\mbox{表全体の縦罫線}$．
 \begin{entable}[\enspace\quad]{2}{5}
 $p'=0$ & |p'=0| & $a_1$ & |a_1| & $x^{2}$ & |x^2| & $\frac{3}{4}$ & |\frac{3}{4}|
   & $\sqrt[5]{6}$ & |\sqrt[5]{6}| \\
-\mergecol{10}{\texttt{\bs begin\{array\}\{\Meta{列指定}\}}\enspace 行列用の表} \\
+\mergecol{10}{\code{\cs{begin}\{array\}\{\Meta{列指定}\}}\enspace 行列用の表} \\
 \end{entable}
 
 数式モードではテキスト中で使える水平スペース命令のほかに以下が使える．
@@ -414,9 +431,9 @@ $p'=0$ & |p'=0| & $a_1$ & |a_1| & $x^{2}$ & |x^2| & $\frac{3}{4}$ & |\frac{3}{4}
 |\displaystyle| & 別行立てスタイル & |\textstyle| & インラインスタイル \\
 \end{entable}
 
-書体の変更には |\mathrm|, |\mathbf|, |\mathit|,
-|\mathsf|, |\mathtt|, |\mathmc|, |\mathgt| および |\mathnormal| を用いる（組み合わせは不可）．
-英大文字に対してのみカリグラフ体への変更命令 |\mathcal| が利用できる（例：$\mathcal{ABC}$）．
+書体の変更には\cs{mathrm}, \cs{mathbf}, \cs{mathit}, \cs{mathsf}, \cs{mathtt},
+\cs{mathmc}, \cs{mathgt}および\cs{mathnormal}を用いる（組み合わせは不可）．
+英大文字に対してのみカリグラフ体への変更命令\cs{mathcal}が利用できる（例：$\mathcal{ABC}$）．
 
 \subsection{上下の装飾}
 
@@ -470,7 +487,7 @@ $\ni$ & |\ni| & $\bowtie$ & |\bowtie| & $\not$ & |\not| &
   & \mergecol{3}{\texttt{\bs mathrel\{}\Meta{記号}\texttt{\}}} \\
 \end{entable}
 
-関係演算子の前に |\not| を前置すると，その否定形を作ることができる．
+関係演算子の前に\cs{not}を前置すると，その否定形を作ることができる．
 
 \subsection{大型演算子}
 
@@ -493,7 +510,7 @@ $\rangle$ & |\rangle| & $\rceil$ & |\rceil| & $\rfloor$ & |\rfloor|
   & \mergecol{3}{\texttt{\bs mathclose\{}\Meta{記号}\texttt{\}}} \\
 \end{entable}
 
-|\left|\Meta{開き括弧}\Meta{数式}|\right|\Meta{閉じ括弧} で括弧類のサイズを自動調整．
+\cs{left}\Meta{開き括弧}\Meta{数式}\cs{right}\Meta{閉じ括弧}で括弧類のサイズを自動調整．
 
 \subsection{矢印類}
 
@@ -544,7 +561,7 @@ $\cdots$ & |\cdots| & $\ldots$ & |\ldots| & \raisebox{-2pt}{$\vdots$} & |\vdots|
 
 \section{相互参照・目次・索引・文献リスト}
 
-これらの機能を利用するには一般に |platex| を複数回実行する必要がある．
+これらの機能を利用するには一般に\code{platex}を複数回実行する必要がある．
 
 \subsection{相互参照}
 
@@ -562,7 +579,8 @@ $\cdots$ & |\cdots| & $\ldots$ & |\ldots| & \raisebox{-2pt}{$\vdots$} & |\vdots|
 |lof| & |\listoffigures| & 図目次 & |lot| & |\listoftables| & 表目次 \\
 \end{entable}
 
-項目の追加：|\addcontentsline{|\Meta{目次の種類}|}{|\Meta{項目の種類}|}{|\Meta{項目}|}|．
+項目の追加：
+\code{\cs{addcontentsline}\{\Meta{目次の種類}\}\{\Meta{項目の種類}\}\{\Meta{項目}\}}．
 
 \subsection{索引}
 
@@ -571,7 +589,7 @@ $\cdots$ & |\cdots| & $\ldots$ & |\ldots| & \raisebox{-2pt}{$\vdots$} & |\vdots|
   & 索引項目の追加 \\
 \end{entable}
 
-indファイルは |mendex| で処理．索引の出力には別途パッケージが必要．
+indファイルは\code{mendex}で処理．索引の出力には別途パッケージが必要．
 
 \subsection{文献リスト}
 
@@ -581,7 +599,7 @@ indファイルは |mendex| で処理．索引の出力には別途パッケー�
 |\bibitem[|\Meta{ラベル}|]{|\Meta{キー}|} |\Meta{テキスト} & 文献項目の記述 \\
 \end{entable}
 
-|pbibtex| を用いて文献リストをデータベースから自動生成する方法もある．
+\code{pbibtex}を用いて文献リストをデータベースから自動生成する方法もある．
 
 \section{p\LaTeX 文書のサンプル}
 
@@ -596,7 +614,7 @@ indファイルは |mendex| で処理．索引の出力には別途パッケー�
 p\LaTeXe 版 {\copyright} 2017 Takuto Asakura \\
 \url{https://wtsnjp.com/pdf/platexsheet.pdf}
 
-バージョン：3.0, 作成日：2017/11/11
+バージョン：3.0, 作成日：2017/11/14
 
 \end{multicols}
 \end{document}
