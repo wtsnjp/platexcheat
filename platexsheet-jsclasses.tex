@@ -1,5 +1,5 @@
 % typeset: ptex2pdf -l platexsheet-jsclasses.tex
-\documentclass[9pt,a4paper,landscape,dvipdfmx,draft]{jsarticle}
+\documentclass[10pt,a4paper,landscape,dvipdfmx,nomag]{jsarticle}
 
 % 使用パッケージ
 \usepackage[small]{titlesec}
@@ -15,7 +15,7 @@
 
 % ドキュメント設定
 %% ページ
-\geometry{top=1cm, left=1cm, right=1cm, bottom=1cm}
+\geometry{top=.85cm, left=.85cm, right=.85cm, bottom=.85cm}
 \pagestyle{empty}
 
 %% 見出し
@@ -23,6 +23,10 @@
 \titlespacing{\section}{0pt}{1pt}{0pt}
 \titlespacing{\subsection}{0pt}{0pt}{0pt}
 \titlespacing{\subsubsection}{0pt}{0pt}{0pt}
+\makeatletter
+\protected@xdef\ttl@fonts{%
+  \ttl@fonts\protect\sffamily\protect\gtfamily\protect\mdseries}
+\makeatother
 
 %% 寸法
 \setlength{\parindent}{0pt}
@@ -147,9 +151,9 @@ p\LaTeXe チートシート{\large （\,jsclasses版）}
   |9pt|/|10pt|/|11pt|/|12pt|/|14pt|/|17pt|/|21pt|/|25pt|/|30pt|/|36pt|\enspace 文字サイズ}\\
 |landscape| & 用紙を横向き & |twocolumn| & 二段組 \\
 |titlepage| & タイトルを独立ページ & |twoside| & 両面印刷 \\
+|papersize| & PDFも用紙サイズ & |uplatex| & up\LaTeX \\
 |leqno| & 数式番号を左側に表示 & |dvipdfmx| & dviドライバ \\
 |fleqn| & 別行立て数式を左寄せ & |tombo| & トンボを表示 \\
-|papersize| & PDFも用紙サイズにする & |nomag| & \cs{mag}を使わない \\
 \end{entable}
 
 クラスオプションに指定したものは読み込んだパッケージへも適用される．
@@ -283,7 +287,7 @@ $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 \vspace{-10pt}
 
 \code{\cs{fontsize}\{\Meta{サイズ}\}\{\Meta{行送り}\}\cs{selectfont}}で寸法による指定も可能．
-これらの命令は通常\code{\{\Meta{命令} \Meta{テキスト}\}}の形で使用．
+\break これらの命令は通常\code{\{\Meta{命令} \Meta{テキスト}\}}の形で使用．
 
 \subsection{入力通りに出力}
 

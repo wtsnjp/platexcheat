@@ -1,5 +1,5 @@
 % typeset: ptex2pdf -l platexsheet.tex
-\documentclass[10pt,a4paper,landscape,dvipdfmx,draft]{jarticle}
+\documentclass[10pt,a4paper,landscape,dvipdfmx]{jarticle}
 
 % 使用パッケージ
 \usepackage[small]{titlesec}
@@ -23,6 +23,10 @@
 \titlespacing{\section}{0pt}{5pt}{0pt}
 \titlespacing{\subsection}{0pt}{0pt}{0pt}
 \titlespacing{\subsubsection}{0pt}{0pt}{0pt}
+\makeatletter
+\protected@xdef\ttl@fonts{%
+  \ttl@fonts\protect\sffamily\protect\gtfamily\protect\mdseries}
+\makeatother
 
 %% 寸法
 \setlength{\parindent}{0pt}
