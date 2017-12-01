@@ -1,5 +1,5 @@
-% typeset: ptex2pdf -l platexsheet.tex
-\documentclass[10pt,a4paper,landscape,dvipdfmx]{jarticle}
+% typeset: ptex2pdf -l platexsheet-jsclasses.tex
+\documentclass[10pt,a4paper,landscape,dvipdfmx,nomag]{jsarticle}
 
 % 使用パッケージ
 \usepackage[small]{titlesec}
@@ -15,12 +15,12 @@
 
 % ドキュメント設定
 %% ページ
-\geometry{top=1cm, left=1cm, right=1cm, bottom=1cm}
+\geometry{top=.85cm, left=.85cm, right=.85cm, bottom=.85cm}
 \pagestyle{empty}
 
 %% 見出し
 \setcounter{secnumdepth}{0}
-\titlespacing{\section}{0pt}{5pt}{0pt}
+\titlespacing{\section}{0pt}{1pt}{0pt}
 \titlespacing{\subsection}{0pt}{0pt}{0pt}
 \titlespacing{\subsubsection}{0pt}{0pt}{0pt}
 \makeatletter
@@ -30,7 +30,8 @@
 
 %% 寸法
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{0pt plus 4.5pt}
+\setlength{\parskip}{0pt plus 4.5pt minus .7pt}
+\renewcommand{\arraystretch}{.9}
 
 %% コード
 \MakeShortVerb{\|}
@@ -99,7 +100,7 @@
 % タイトル
 \begin{center}
 \Large\sffamily\gtfamily
-p\LaTeXe チートシート
+p\LaTeXe チートシート{\large （\,jsclasses版）}
 \end{center}
 
 \section{p\LaTeXe の基本}
@@ -133,24 +134,24 @@ p\LaTeXe チートシート
 本文はdocument環境に書く．\cs{documentclass}と\code{\cs{begin}\{document\}}の間は
 \emph{プリアンブル}と呼ばれ，文書全体に適用する設定などを記述する．
 
-\subsection{標準クラス}
+\subsection{新ドキュメントクラス}
 
-\begin{entable}{2}{2}
-|jbook| & 横書き書籍 & |tbook| & 縦書き書籍 \\
-|jarticle| & 横書き論文 & |tarticle| & 縦書き論文 \\
-|jreport| & 横書きレポート & |treport| & 縦書きレポート \\
+\begin{entable}{2}{3}
+|jsarticle| & 論文用 & |jsreport| & レポート用 & |jsbook| & 書籍用 \\
 \end{entable}
 
 クラスによってデフォルトのオプションや使える見出し命令などが異なる．
 
-\subsection{主な標準クラスオプション}
+\subsection{主なクラスオプション}
 
 \begin{entable}[\enspace\qquad]{2}{2}
 \mergecol{4}{%
   |a4paper|/|a5paper|/|b4paper|/|b5paper|\enspace 用紙サイズ（B系列はJIS規格）} \\
-|a4j|/|a5j|/|b4j|/|b5j| & 上記より余白が狭い & |landscape| & 用紙を横向き \\
-|10pt|/|11pt|/|12pt| & 文字サイズ & |twocolumn| & 二段組 \\
+\mergecol{4}{%
+  |9pt|/|10pt|/|11pt|/|12pt|/|14pt|/|17pt|/|21pt|/|25pt|/|30pt|/|36pt|\enspace 文字サイズ}\\
+|landscape| & 用紙を横向き & |twocolumn| & 二段組 \\
 |titlepage| & タイトルを独立ページ & |twoside| & 両面印刷 \\
+|papersize| & PDFも用紙サイズ & |uplatex| & up\LaTeX \\
 |leqno| & 数式番号を左側に表示 & |dvipdfmx| & dviドライバ \\
 |fleqn| & 別行立て数式を左寄せ & |tombo| & トンボを表示 \\
 \end{entable}
@@ -264,7 +265,7 @@ $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 \subsection{フォントサイズ}
 
 \bgroup
-\setlength{\columnsep}{14pt}
+\setlength{\columnsep}{-20pt}
 \begin{multicols}{2}
 \begin{tabbing}
 |\footnotesize| \= \kill
@@ -274,16 +275,19 @@ $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 |\small| \> {\small 小さい} \\
 |\normalsize| \> {\normalsize 標準サイズ} \\
 |\large| \> {\large 大きい} \\
-|\Large| \= {\Large 超大きい} \\
-|\LARGE| \> {\LARGE 超々大きい} \\
+|\Large| \> {\Large 超大きい} \\
+|\LARGE| \= {\LARGE 超々大きい} \\
 |\huge| \> {\huge 巨大} \\
-|\Huge| \> {\Huge 超巨大} %\\
+|\Huge| \> {\Huge 超巨大} \\
+|\HUGE| \> {\HUGE 超々巨大} \\
 \end{tabbing}
 \end{multicols}
 \egroup
 
+\vspace{-10pt}
+
 \code{\cs{fontsize}\{\Meta{サイズ}\}\{\Meta{行送り}\}\cs{selectfont}}で寸法による指定も可能．
-これらの命令は通常\code{\{\Meta{命令} \Meta{テキスト}\}}の形で使用．
+\break これらの命令は通常\code{\{\Meta{命令} \Meta{テキスト}\}}の形で使用．
 
 \subsection{入力通りに出力}
 
@@ -496,10 +500,10 @@ $\ni$ & |\ni| & $\bowtie$ & |\bowtie| & $\not$ & |\not| &
 \subsection{大型演算子}
 
 \begin{entable}[\enspace\quad]{2}{4}
-$\int$ & |\int| & $\bigotimes$ & |\bigotimes| & $\bigcap$ & |\bigcap| & $\bigcup$ & |\bigcup| \\[3pt]
-$\oint$ & |\oint| & $\bigoplus$ & |\bigoplus| & $\biguplus$ & |\biguplus| & $\bigsqcup$ & |\bigsqcup| \\[3pt]
-$\sum$ & |\sum| & $\bigodot$ & |\bigodot| & $\bigvee$ & |\bigvee| & $\bigwedge$ & |\bigwedge| \\[3pt]
-$\prod$ & |\prod| & $\coprod$ & |\coprod| & $\smallint$ & |\smallint| & & |\mathop{|\Meta{記号}|}| \\
+$\int$ & |\int| & $\bigotimes$ & |\bigotimes| & $\bigcap$ & |\bigcap| & $\bigcup$ & |\bigcup| \\[2pt]
+$\oint$ & |\oint| & $\bigoplus$ & |\bigoplus| & $\biguplus$ & |\biguplus| & $\bigsqcup$ & |\bigsqcup| \\[2pt]
+$\sum$ & |\sum| & $\bigodot$ & |\bigodot| & $\bigvee$ & |\bigvee| & $\bigwedge$ & |\bigwedge| \\[2pt]
+$\prod$ & |\prod| & $\coprod$ & |\coprod| & $\smallint$ & |\smallint| & & |\mathop{|\Meta{記号}|}| \\[2pt]
 \end{entable}
 
 \subsection{括弧類}
@@ -607,7 +611,7 @@ indファイルは\code{mendex}で処理．索引の出力には別途パッケ�
 
 \section{p\LaTeX 文書のサンプル}
 
-\lstinputlisting{sample.tex}
+\lstinputlisting{sample-jsclasses.tex}
 
 \rule{.3\linewidth}{.25pt}
 \scriptsize
@@ -615,8 +619,8 @@ indファイルは\code{mendex}で処理．索引の出力には別途パッケ�
 \LaTeXe 版 {\copyright} 2006 Winston Chang \\
 \url{http://www.stdout.org/~winston/latex/}
 
-p\LaTeXe 版 {\copyright} 2017 Takuto Asakura \\
-\url{https://wtsnjp.com/pdf/platexsheet.pdf}
+p\LaTeXe\ (jsclasses) 版 {\copyright} 2017 Takuto Asakura \\
+\url{https://wtsnjp.com/pdf/platexsheet-jsclasses.pdf}
 
 バージョン：3.0, 作成日：2017/12/01
 
