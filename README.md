@@ -16,7 +16,9 @@ pLaTeX2e でよく用いられる命令を2ページの PDF にまとめたチ�
 
 ## 配布場所など
 
-* PDF ファイル：<https://wtsnjp.com/pdf/platexsheet.pdf>
+* PDF ファイル
+	* <https://wtsnjp.com/pdf/platexsheet.pdf>
+	* <https://wtsnjp.com/pdf/platexsheet-jsclasses.pdf>
 * CTAN パッケージ：<https://www.ctan.org/pkg/platexcheat>
 * GitHub リポジトリ：<https://github.com/wtsnjp/platexcheat>
 
