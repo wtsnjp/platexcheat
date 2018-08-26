@@ -1,6 +1,6 @@
 # pLaTeX2e チートシート
 
-pLaTeX2e でよく用いられる命令を2ページの PDF にまとめたチートシートです．英語版の [LaTeX2e Cheat Sheet](http://www.stdout.org/~winston/latex/) を基に作成を開始しましたが，pLaTeX2e 版独自の改良を多数加えています．
+pLaTeX2e でよく用いられる命令を2ページの PDF にまとめたチートシート（コマンド一覧）です．英語版の [LaTeX2e Cheat Sheet](http://www.stdout.org/~winston/latex/) を基に作成を開始しましたが，pLaTeX2e 版独自の改良を多数加えています．
 
 ## 編集方針
 
