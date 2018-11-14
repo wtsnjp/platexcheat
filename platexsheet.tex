@@ -71,6 +71,7 @@
 
 %% ユーザ用マクロ
 \chardef\vbar=`\| \chardef\bs=`\\
+\let\lbrace\{ \let\rbrace\}
 \chardef\{=`\{ \chardef\}=`\}
 \newcommand{\codefont}{\ttfamily\gtfamily}
 \newcommand{\cs}[1]{\eghostguarded{{\codefont \bs #1}}}
@@ -350,7 +351,7 @@ $\mboxtt{!}=\mbox{条件が悪くても指定位置に配置}$．
 \subsection{括弧類}
 
 \begin{entable}{2}{6}
-` ' & \verb*!` '! & `` '' & \verb*!`` ''! & \{ \} & \verb*!\{ \}!
+` ' & \verb*!` '! & `` '' & \verb*!`` ''! & \lbrace\space\rbrace & \verb*!\{ \}!
   & [ ] & \verb*![ ]! & ( ) & \verb*!( )! \\
 \end{entable}
 
