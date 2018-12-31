@@ -1,0 +1,8 @@
+# llmk.toml for wtsnjp/platexcheat
+latex = "platex"
+source = [
+  "platexsheet.tex",
+  "platexsheet-jsclasses.tex",
+  "sample.tex",
+  "sample-jsclasses.tex",
+]
