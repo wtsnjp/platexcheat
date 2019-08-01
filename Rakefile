@@ -38,10 +38,7 @@ task :ctan => :doc do
   intro_en = <<~INTRO
     # pLaTeX2e cheat sheet
 
-    This is a translation to Japanese of Winston Chang's LaTeX cheat sheet (a
-    reference sheet for writing scientific papers). It has been adapted to
-    Japanese standards using pLaTeX, and also attached additional information
-    of "standard LaTeX" (especially about math-mode).
+    This is a translation to Japanese of Winston Chang's LaTeX cheat sheet (a reference sheet for writing scientific papers). It has been adapted to Japanese standards using pLaTeX, and also attached additional information of "standard LaTeX" (especially about math-mode).
   INTRO
 
   File.open(TARGET_DIR + "README.md", "r+") do |f|
