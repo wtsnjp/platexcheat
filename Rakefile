@@ -1,15 +1,14 @@
 # Rakefile for wtsnjp/platexcheat
 require 'rake/clean'
 require 'pathname'
-require 'optparse'
 
 # basics
 PKG_VERSION = "3.1"
 PKG_NAME = "platexcheat-#{PKG_VERSION}"
 
 # woking/temporaly dirs
-PWD = Pathname.pwd
-TMP_DIR = PWD + "tmp"
+REPO_ROOT = Pathname.pwd
+TMP_DIR = REPO_ROOT + "tmp"
 
 # cleaning
 CLEAN.include(["*.aux", "*.dvi", "*.log", "*.synctex.gz", "tmp"])
@@ -20,7 +19,7 @@ task default: :doc
 
 desc "Typeset all contents"
 task :doc do
-  sh "llmk > #{File::NULL} 2> #{File::NULL}"
+  sh "llmk"
 end
 
 desc "Create an archive for CTAN"
@@ -51,5 +50,5 @@ task :ctan => :doc do
   # create zip archive
   cd TMP_DIR
   sh "zip -q -r #{PKG_NAME}.zip #{PKG_NAME}"
-  mv "#{PKG_NAME}.zip", PWD
+  mv "#{PKG_NAME}.zip", REPO_ROOT
 end
